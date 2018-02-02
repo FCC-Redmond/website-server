@@ -11,18 +11,18 @@
     "type": "git",
     "url": "git+https://github.com/FCC-Redmond/website-server.git"
   },
-  "author": "",
+  "author": "Amber Kim, Apoorva Teja",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/FCC-Redmond/website-server/issues"
   },
   "homepage": "https://github.com/FCC-Redmond/website-server#readme",
   "devDependencies": {
-    "body-parser": "^1.18.2",
-    "cors": "^2.8.4",
-    "express": "^4.16.2"
   },
   "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
     "mongodb": "^3.0.2",
     "mongoose": "^5.0.3"
   }

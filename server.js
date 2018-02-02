@@ -4,7 +4,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const mongoose = require('mongoose');
 const config = require('./config.js');
 const http= require('http');
 const debug = require('debug')('website-server:server');
@@ -16,12 +15,7 @@ const app = express();
 const PORT = normalizePort(process.env.PORT || 3000);
 
 
-// mongodb connection
-const DATABASE_URL = process.env.DATABASE_URL || config.database.url;
 
-//mongoose.connect(DATABASE_URL);
-//var db = mongoose.connection;
-//db.on('error', console.error.bind(console, 'connection error:'));
 
 
 //setup the appRoot global 
@@ -109,7 +103,7 @@ app.use(function (err, req, res, next) {
   //figure out what to do with errors
 
   //// render the error page
-  // res.status(err.status || 500);
+   res.status(err.status || 500);
   // res.render('error');
 });
 

@@ -5,23 +5,16 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const config = require('./config.js');
-const http= require('http');
+const http = require('http');
 const debug = require('debug')('website-server:server');
 const path = require('path');
-
-
 
 const app = express();
 const PORT = normalizePort(process.env.PORT || 3000);
 
-
-
-
-
 //setup the appRoot global 
 
 global.appRoot = path.resolve(__dirname);
-
 
 // parse incoming requests
 app.use(bodyParser.json());
@@ -36,7 +29,7 @@ app.use('/api/v0/', api);
 /**
  * Get port from environment and store in Express.
  */
-app.set('port',PORT);
+app.set('port', PORT);
 
 /**
  * Create https server
@@ -56,9 +49,9 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string' ?
-    'Pipe ' + port :
-    'Port ' + port;
+  var bind = typeof PORT === 'string' ?
+    'Pipe ' + PORT :
+    'Port ' + PORT;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -99,11 +92,10 @@ app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-  console.log(err);
-  //figure out what to do with errors
 
   //// render the error page
-   res.status(err.status || 500);
+  res.status(err.status || 500);
+  res.send();
   // res.render('error');
 });
 
@@ -126,8 +118,3 @@ function normalizePort(val) {
 
   return false;
 }
-
-/**
- * Define routes
- */
-

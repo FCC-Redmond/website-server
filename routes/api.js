@@ -2,7 +2,7 @@
 
 var express = require('express');
 var router = express.Router();
-var database = require('../core/db.js');
+var database = require('../model/db.js');
 
 /**GET method to list members. Need to hook it up to DB */
 var getMembers = function (req, res, next) {

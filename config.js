@@ -2,7 +2,7 @@
 
 const config = {
     "database": {
-        "url": "mongodb://localhost:27017/fccrmembers" 
+        "url": "mongodb://localhost:27017/fccRedmondWebsite" 
     }
 };
 

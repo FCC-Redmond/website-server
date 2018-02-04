@@ -22,6 +22,8 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 
+app.use(cors());
+
 //setup routes
 var api = require('./routes/api.js');
 app.use('/api/v0/', api);

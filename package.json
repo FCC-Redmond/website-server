@@ -17,8 +17,7 @@
     "url": "https://github.com/FCC-Redmond/website-server/issues"
   },
   "homepage": "https://github.com/FCC-Redmond/website-server#readme",
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "dependencies": {
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",

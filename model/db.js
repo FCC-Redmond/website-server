@@ -20,13 +20,22 @@ var memberSchema = new Schema({
 //define a model
 var members = mongoose.model('members', memberSchema);
 
-members.find(listMembers).exec();
+//members.find(listMembers).exec();
 
 var listMembers = function (error, members) {
     if (error) {
+        return error;
         console.error('Inside listMembers:' + error);
     }
     console.log(members);
+};
+
+
+var getMember = function (error, member) {
+    if (error) {
+        return error;
+    }
+    console.log(member);
 };
 
 try {
@@ -63,4 +72,10 @@ try {
 
 module.exports.list = function () {
     return members.find(listMembers).exec();
+};
+
+module.exports.findMember = function (lName) {
+    return members.findOne({
+        lastName: lName
+    }, getMember).exec();
 };

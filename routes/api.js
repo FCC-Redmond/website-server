@@ -5,18 +5,36 @@ var router = express.Router();
 var database = require('../model/db.js');
 
 /**GET method to list members. Need to hook it up to DB */
-var getMembers = function (req, res, next) {
+var getMembers = async function (req, res, next) {
     try {
-        database.list().then(function (members) {
-            res.send(members);
-        }).catch(function (err) {
-            console.error('Error getting members from DB: ' + error);
-        });
+        var list = await database.list();
+        res.send(list);
     } catch (err) {
+        onError();
         console.error(err);
     }
 };
 
+
+var getMemberByLastName = async function (req, res, next) {
+    var lastName =  req.params.lName;
+    try{
+        var member = await database.findMember(lastName);
+        res.send(member);
+
+    }catch(err){
+        onError();
+        console.error(err);
+    }
+};
+
+let onError = function(){
+    let error = new Error('Server Error');
+    error.status = 500;
+    res.send(error);
+};
+//setup your routes
 router.get('/members/list', getMembers);
+router.get('/member/:lName', getMemberByLastName);
 
 module.exports = router;

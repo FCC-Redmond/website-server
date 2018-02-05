@@ -76,6 +76,8 @@ module.exports.list = function () {
 
 module.exports.findMember = function (lName) {
     return members.findOne({
-        lastName: lName
+        "lastName": {
+            $regex: new RegExp(lName, "i")
+        }
     }, getMember).exec();
 };

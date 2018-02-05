@@ -38,6 +38,13 @@ var getMember = function (error, member) {
     console.log(member);
 };
 
+var addMember = function (error, member) {
+    if (error) {
+        return error;
+    }
+    console.log(member);
+};
+
 try {
     mongoose.connect(DATABASE_URL, function (err) {
         console.log('Error on connection: ' + err);
@@ -79,3 +86,7 @@ module.exports.findMember = function (lName) {
         lastName: lName
     }, getMember).exec();
 };
+
+module.exports.addMember = function(memberObj) {
+    return members.insert(memberObj, getMember).exec();
+}

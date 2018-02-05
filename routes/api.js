@@ -22,7 +22,18 @@ var getMemberByLastName = async function (req, res, next) {
         var member = await database.findMember(lastName);
         res.send(member);
 
-    }catch(err){
+    } catch(err){
+        onError();
+        console.error(err);
+    }
+};
+
+var addMember = async function (req, res, next) {
+    try {
+        var member = req.body;
+        var member = database.insert(member);
+        res.send('insert completed');
+    } catch (err) {
         onError();
         console.error(err);
     }
@@ -36,5 +47,6 @@ let onError = function(){
 //setup your routes
 router.get('/members/list', getMembers);
 router.get('/member/:lName', getMemberByLastName);
+router.post('/member', addMember);
 
 module.exports = router;

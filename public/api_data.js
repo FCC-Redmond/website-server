@@ -1,7 +1,7 @@
 define({ "api": [
   {
     "type": "get",
-    "url": "/members/",
+    "url": "/api/v0/members/",
     "title": "Request all members in database",
     "name": "GetMembers",
     "description": "<p>Retrieves all members in database</p>",
@@ -105,7 +105,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/members/:lName",
+    "url": "/api/v0/members/:lName",
     "title": "Request member info by last name",
     "name": "getMemberByLastName",
     "description": "<p>Retrieves one member in database with the given last name. <i>Currently retrieves only one successful last name match.</i></p>",
@@ -222,7 +222,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/members?skills=:skills",
+    "url": "/api/v0/members?skills=:skills",
     "title": "Request members with the specified skills",
     "name": "getMemberBySkills",
     "description": "<p>Retrieves members with all the skills specified in the query string parameter &quot;skills&quot;. <i>Note that skills query string parameter is a comma separated value of the skills and is case sensitive</i></p>",

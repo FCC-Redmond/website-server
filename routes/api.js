@@ -14,7 +14,7 @@ var database = require('../model/db.js');
  */
 
 /**
- *  @api {get} /members/ Request all members in database
+ *  @api {get} /api/v0/members/ Request all members in database
  *  @apiName GetMembers
  *  @apiDescription Retrieves all members in database
  *  @apiGroup Members
@@ -93,7 +93,7 @@ var getMembers = async function (req, res, next) {
 };
 
 /**
- *  @api {get} /members/:lName Request member info by last name
+ *  @api {get} /api/v0/members/:lName Request member info by last name
  *  @apiName getMemberByLastName
  *  @apiDescription Retrieves one member in database with the given last name. <i>Currently retrieves only one successful last name match.</i> 
  *  @apiGroup Members
@@ -154,7 +154,7 @@ var getMemberByLastName = async function (req, res, next) {
 };
 
 /**
- *  @api {get} /members?skills=:skills Request members with the specified skills
+ *  @api {get} /api/v0/members?skills=:skills Request members with the specified skills
  *  @apiName getMemberBySkills
  *  @apiDescription Retrieves members with all the skills specified in the query string parameter "skills". <i>Note that skills query string parameter is a comma separated value of the skills and is case sensitive</i>
  *  @apiGroup Members

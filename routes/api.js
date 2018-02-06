@@ -78,13 +78,18 @@ var database = require('../model/db.js');
  */
 
 var getMembers = async function (req, res, next) {
-    try {
-        var list = await database.list();
-        res.send(list);
-    } catch (err) {
-        onError(res);
-        console.error(err);
+    if (req.query.hasOwnProperty("skills")) {
+        getMembersBySkills(req,res,next);
+    } else {
+        try {
+            var list = await database.list();
+            res.send(list);
+        } catch (err) {
+            onError(res);
+            console.error(err);
+        }
     }
+
 };
 
 /**
@@ -215,8 +220,8 @@ let onError = function (res) {
     res.send(error);
 };
 //setup your routes
-router.get('/members/list', getMembers);
-router.get('/member/:lName', getMemberByLastName);
-router.get('/members/', getMembersBySkills);
+router.get('/members', getMembers);
+router.get('/members/:lName', getMemberByLastName);
+
 
 module.exports = router;

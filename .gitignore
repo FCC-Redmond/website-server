@@ -1,6 +1,11 @@
 node_modules
+<<<<<<< HEAD
 .vscode
 apidoc.json
 Procfile
 *.log
 apidoc
+=======
+Procfile
+.vscode
+>>>>>>> 06f9e2cc916ee0c0d79026a26773c6131fa434b9

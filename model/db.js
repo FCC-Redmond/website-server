@@ -90,6 +90,6 @@ module.exports.findMember = function (lName) {
 
 module.exports.findMembersBySkills = function (skills) {
     return members.find({
-        "skills":  {$all: skills.split(",")}
+        "skills": { $all: { $regex: new RegExp(skills.split(","), "i") } }
     }, getMembersWithSkills).exec();
 };

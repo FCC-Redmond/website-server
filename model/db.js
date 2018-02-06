@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 var config = require('../config.js');
 // mongodb connection
-const DATABASE_URL = process.env.DATABASE_URL || config.database.url;
+const DATABASE_URL = process.env.MONGODB_URI || config.database.url;
 
 //define a schema
 var Schema = mongoose.Schema;
@@ -36,6 +36,12 @@ var getMember = function (error, member) {
         return error;
     }
     console.log(member);
+};
+var getMembersWithSkills = function (error, members) {
+    if (error) {
+        return error;
+    }
+    console.log(members);
 };
 
 try {
@@ -80,4 +86,10 @@ module.exports.findMember = function (lName) {
             $regex: new RegExp(lName, "i")
         }
     }, getMember).exec();
+};
+
+module.exports.findMembersBySkills = function (skills) {
+    return members.find({
+        "skills":  {$all: skills.split(",")}
+    }, getMembersWithSkills).exec();
 };

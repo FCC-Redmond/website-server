@@ -45,13 +45,25 @@ var getMembersWithSkills = function (error, members) {
 };
 
 try {
-    mongoose.connect(DATABASE_URL, function (err) {
-        console.log('Error on connection: ' + err);
+    let options = {
+        "autoReconnect": true,
+        "reconnectTries": Number.MAX_VALUE,
+        "reconnectInterval": 500
+    };
+    mongoose.Promise = Promise;
+    mongoose.connect(DATABASE_URL, options).then(function () {
+        console.info(`Mongoose connection successfully created`);
+    }).catch(function (error) {
+        console.error(`Error on connection: ${error}`);
     });
     var db = mongoose.connection;
 
     // When successfully connected
     mongoose.connection.on('connected', function () {
+        /**
+        * Start the webserver when connection is established
+        */
+        require('../server.js').startup();
         console.log('Mongoose default connection open to ' + DATABASE_URL);
     });
 
@@ -62,7 +74,12 @@ try {
 
     // When the connection is disconnected
     mongoose.connection.on('disconnected', function () {
+        /**
+         * Shutdown web server if the DB is unavilable
+         */
+        require('../server.js').shutdown();
         console.log('Mongoose default connection disconnected');
+
     });
     // If the Node process ends, close the Mongoose connection 
     process.on('SIGINT', function () {

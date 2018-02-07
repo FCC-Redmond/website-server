@@ -41,7 +41,7 @@ app.set('port', PORT);
  * Create https server
  */
 var server = http.createServer(app);
-server.listen(PORT);
+
 
 server.on('error', onError);
 server.on('listening', onListening);
@@ -84,6 +84,7 @@ function onListening() {
     'pipe ' + addr :
     'port ' + addr.port;
   debug('Listening on ' + bind);
+  console.info('Listening on ' + bind);
 }
 
 // catch 404 and forward to error handler
@@ -124,3 +125,15 @@ function normalizePort(val) {
 
   return false;
 }
+
+module.exports.startup = function(){
+  server.listen(PORT);
+};
+
+module.exports.shutdown = function(){
+  try{
+    server.close();
+  }catch(err){
+    console.error(`Could not shutdown web server: ${err}`);
+  }
+};

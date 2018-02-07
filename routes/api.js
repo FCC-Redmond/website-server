@@ -66,7 +66,7 @@ var database = require('../model/db.js');
  *       "profileUrl": "/member/teja",
  *       "email": "apoorva.teja@gmail.com"
  *   }
-*]
+ *]
  *
  *@apiError NoMemberFound Empty Array returned if no members found
  *@apiErrorExample Error-Response:   
@@ -79,13 +79,13 @@ var database = require('../model/db.js');
 
 var getMembers = async function (req, res, next) {
     if (req.query.hasOwnProperty("skills")) {
-        getMembersBySkills(req,res,next);
+        getMembersBySkills(req, res, next);
     } else {
         try {
             var list = await database.list();
-            res.send(list);
+            res.status(200).send(list);
         } catch (err) {
-            onError(res);
+            onError(res,err);
             console.error(err);
         }
     }
@@ -145,10 +145,15 @@ var getMemberByLastName = async function (req, res, next) {
     var lastName = req.params.lName;
     try {
         var member = await database.findMember(lastName);
-        res.send(member);
+        if (member.length == 0) {
+            res.status(404).send('No members with last name ' + lastName + ' found');
+        } else {
+            res.status(200).send(member);
+        }
+
 
     } catch (err) {
-        onError(res);
+        onError(res,err);
         console.error(err);
     }
 };
@@ -206,22 +211,27 @@ var getMembersBySkills = async function (req, res, next) {
     var skills = req.query.skills;
     try {
         var members = await database.findMembersBySkills(skills);
-        res.send(members);
-
+        if (members.length == 0) {
+            res.status(404).send('No members with the skills "' + skills + '" found');
+        } else {
+            res.status(200).send(members);
+        }
     } catch (err) {
-        onError(res);
+        onError(res,err);
         console.error(err);
     }
 };
 
-let onError = function (res) {
-    let error = new Error('Server Error');
-    error.status = 500;
-    res.send(error);
+var addNewMember = function(){
+    
+};
+
+let onError = function (res,error) {
+    res.status(500).send(error.message);
 };
 //setup your routes
 router.get('/members', getMembers);
 router.get('/members/:lName', getMemberByLastName);
-
+router.post('/members/add',addNewMember);
 
 module.exports = router;

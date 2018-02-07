@@ -20,8 +20,6 @@ var memberSchema = new Schema({
 //define a model
 var members = mongoose.model('members', memberSchema);
 
-//members.find(listMembers).exec();
-
 var listMembers = function (error, members) {
     if (error) {
         return error;

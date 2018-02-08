@@ -47,7 +47,11 @@ var database = require('../model/db.js');
  *               "linkedInUrl": "https://www.linkedin.com/in/amberkim",
  *               "gitHubUrl": "https://www.github.com/amber",
  *               "profileUrl": "/member/kim",
- *               "email": "amber@gmail.com"
+ *               "email": "amber@gmail.com",
+ *               "addTS" "2018-02-08 11:37:02.104",
+ *               "modifiedTS": "2018-02-08 11:37:02.104",
+ *               "__V": 0
+ * 
  *              },
  *              {
  *               "skills": [
@@ -65,7 +69,10 @@ var database = require('../model/db.js');
  *                  "linkedInUrl": "https://www.linkedin.com/in/apoorvateja",
  *                  "gitHubUrl": "https://www.github.com/kumbuT",
  *                  "profileUrl": "/member/teja",
- *                  "email": "apoorva.teja@gmail.com"
+ *                  "email": "apoorva.teja@gmail.com",
+ *                  "addTS" "2018-02-08 11:37:02.104",
+ *                  "modifiedTS": "2018-02-08 11:37:02.104",
+ *                  "__V": 0
  *                  }
  *              ]
  * }
@@ -133,6 +140,9 @@ var getMembers = async function (req, res, next) {
  *               "gitHubUrl": "https://www.github.com/amber",
  *               "profileUrl": "/member/kim",
  *               "email": "amber@gmail.com"
+ *               "addTS" "2018-02-08 11:37:02.104",
+ *               "modifiedTS": "2018-02-08 11:37:02.104",
+ *               "__V": 0
  *              }]
  * }
  *
@@ -203,6 +213,9 @@ var getMemberByLastName = async function (req, res, next) {
  *       "gitHubUrl": "https://www.github.com/kumbuT",
  *       "profileUrl": "/member/teja",
  *       "email": "apoorva.teja@gmail.com"
+ *       "addTS" "2018-02-08 11:37:02.104",
+ *       "modifiedTS": "2018-02-08 11:37:02.104",
+ *       "__V": 0
  *   }
  *
  *  @apiError NoMemberFound  404 Response sent if no member with given last name exists

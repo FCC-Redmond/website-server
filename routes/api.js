@@ -32,43 +32,42 @@ var database = require('../model/db.js');
  * 
  *  @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
- *  {"success":true,
- *   "message": [
- *              {
- *                   "skills": [
- *                   "JavaScript",
- *                   "NodeJs",
- *                   "ExpressJs",
- *                 "MongoDB"
- *               ],
- *               "_id": "5a78d098670168148c5ebb52",
- *               "lastName": "Kim",
- *               "firstName": "Amber",
- *               "linkedInUrl": "https://www.linkedin.com/in/amberkim",
- *               "gitHubUrl": "https://www.github.com/amber",
- *               "profileUrl": "/member/kim",
- *               "email": "amber@gmail.com"
- *              },
- *              {
- *               "skills": [
- *                          "JavaScript",
- *                          "C#",
- *                          "Azure",
- *                          "NodeJs",
- *                          "ExpressJs",
- *                          "MongoDB",
- *                          "REDIS"
- *                          ],
- *                  "_id": "5a78d145670168148c5ebb54",
- *                  "lastName": "Teja",
- *                  "firstName": "Apoorva",
- *                  "linkedInUrl": "https://www.linkedin.com/in/apoorvateja",
- *                  "gitHubUrl": "https://www.github.com/kumbuT",
- *                  "profileUrl": "/member/teja",
- *                  "email": "apoorva.teja@gmail.com"
- *                  }
- *              ]
- * }
+ *  [
+ *   {
+ *       "skills": [
+ *           "JavaScript",
+ *           "NodeJs",
+ *           "ExpressJs",
+ *           "MongoDB"
+ *       ],
+ *       "_id": "5a78d098670168148c5ebb52",
+ *       "lastName": "Kim",
+ *       "firstName": "Amber",
+ *       "linkedInUrl": "https://www.linkedin.com/in/amberkim",
+ *       "gitHubUrl": "https://www.github.com/amber",
+ *       "profileUrl": "/member/kim",
+ *       "email": "amber@gmail.com"
+ *   },
+ *   {
+ *       "skills": [
+ *           "JavaScript",
+ *           "C#",
+ *           "Azure",
+ *           "NodeJs",
+ *           "ExpressJs",
+ *           "MongoDB",
+ *           "REDIS"
+ *       ],
+ *       "_id": "5a78d145670168148c5ebb54",
+ *       "lastName": "Teja",
+ *       "firstName": "Apoorva",
+ *       "linkedInUrl": "https://www.linkedin.com/in/apoorvateja",
+ *       "gitHubUrl": "https://www.github.com/kumbuT",
+ *       "profileUrl": "/member/teja",
+ *       "email": "apoorva.teja@gmail.com"
+ *   }
+ *  ]
+ *
  *  @apiError NoMemberFound Empty Array returned if no members found
  *  @apiErrorExample Error-Response:   
  *  {
@@ -84,10 +83,7 @@ var getMembers = async function (req, res, next) {
     } else {
         try {
             var list = await database.list();
-            res.status(200).send({
-                "success": true,
-                "message": list
-            });
+            res.status(200).send(list);
         } catch (err) {
             onError(res, err);
             console.error(err);
@@ -117,24 +113,24 @@ var getMembers = async function (req, res, next) {
  * 
  *  @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
-  *  {"success":true,
- *   "message": [
- *              {
- *                   "skills": [
- *                   "JavaScript",
- *                   "NodeJs",
- *                   "ExpressJs",
- *                 "MongoDB"
- *               ],
- *               "_id": "5a78d098670168148c5ebb52",
- *               "lastName": "Kim",
- *               "firstName": "Amber",
- *               "linkedInUrl": "https://www.linkedin.com/in/amberkim",
- *               "gitHubUrl": "https://www.github.com/amber",
- *               "profileUrl": "/member/kim",
- *               "email": "amber@gmail.com"
- *              }]
- * }
+ *    {
+ *       "skills": [
+ *           "JavaScript",
+ *           "C#",
+ *           "Azure",
+ *           "NodeJs",
+ *           "ExpressJs",
+ *           "MongoDB",
+ *           "REDIS"
+ *       ],
+ *       "_id": "5a78d145670168148c5ebb54",
+ *       "lastName": "Teja",
+ *       "firstName": "Apoorva",
+ *       "linkedInUrl": "https://www.linkedin.com/in/apoorvateja",
+ *       "gitHubUrl": "https://www.github.com/kumbuT",
+ *       "profileUrl": "/member/teja",
+ *       "email": "apoorva.teja@gmail.com"
+ *   }
  *
  *  @apiError NoMemberFound  404 Response sent if no member with given last name exists
  *  @apiErrorExample Error-Response:   
@@ -149,11 +145,8 @@ var getMemberByLastName = async function (req, res, next) {
     var lastName = req.params.lName;
     try {
         var member = await database.findMember(lastName);
-        if (!member || member.length == 0) {
-            res.status(404).send({
-                "success": false,
-                "message": 'No members with last name ' + lastName + ' found'
-            });
+        if (member === 'undefined' || member.length == 0) {
+            res.status(404).send('No members with last name ' + lastName + ' found');
         } else {
             res.status(200).send(member);
         }
@@ -218,13 +211,10 @@ var getMembersBySkills = async function (req, res, next) {
     var skills = req.query.skills;
     try {
         var members = await database.findMembersBySkills(skills);
-        if (!member || members.length == 0) {
+        if (members === 'undefined' || members.length == 0) {
             res.status(404).send('No members with the skills "' + skills + '" found');
         } else {
-            res.status(200).send({
-                "success": true,
-                "message": members
-            });
+            res.status(200).send(members);
         }
     } catch (err) {
         onError(res, err);
@@ -276,21 +266,15 @@ var addMember = function (req, res, next) {
         if (req.body.hasOwnProperty("memberProfile")) {
             let newMember = req.body.memberProfile;
             if (!newMember.hasOwnProperty("email")) {
-                res.status(422).send({
-                    "success": false,
-                    "message": "memberProfile doesn't have email property"
-                });
+                res.status(422).send({ "success": false, "message": "memberProfile doesn't have email property" });
             } else {
                 let cb = function (err, member) {
                     if (err) {
                         onError(res, err, 500);
                         return;
                     }
-                    if (member && member.hasOwnProperty("_id")) {
-                        res.status(200).send({
-                            "success": true,
-                            "message": "New member created with ID:" + member._id
-                        });
+                    if (member != 'undefined' || member.hasOwnProperty("_id")) {
+                        res.status(200).send({ "success": true, "message": "New member created with ID:" + member._id });
                     } else {
                         onError(res, new Error("Failed to add member"));
                     }
@@ -298,10 +282,7 @@ var addMember = function (req, res, next) {
                 database.addMember(newMember, cb);
             }
         } else {
-            res.status(422).send({
-                "success": false,
-                "message": "memberProfile wasn't found in the request body"
-            });
+            res.status(422).send({ "success": false, "message": "memberProfile wasn't found in the request body" });
         }
     } catch (err) {
         onError(res, err);
@@ -311,8 +292,8 @@ var addMember = function (req, res, next) {
 
 /**
  * @param {Object} res         response object sent from caller
- * @param {Object} error       Error object sent
- * @param {Number} statusCode  HTTP error code. Optional. If provided then use it insead of generic 500 error
+ * @param {Object}  error       Error object sent
+ * @param {Number}    statusCode  HTTP error code. Optional. If provided then use it insead of generic 500 error
  */
 
 let onError = function (res, error, statusCode) {
@@ -320,10 +301,7 @@ let onError = function (res, error, statusCode) {
     if (statusCode && typeof statusCode == "Number") {
         res.status(statusCode).send(error.message);
     } else {
-        res.status(500).send({
-            "success": false,
-            "message": error.message
-        });
+        res.status(500).send(error.message);
     }
 
 };

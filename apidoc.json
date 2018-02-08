@@ -1,0 +1,7 @@
+{
+    "name": "FCCREDMOND",
+    "version": "0.0.1",
+    "description": "Server API for FreeCodeCamp Redmond Chapter Website",
+    "title": "FCC Redmond Server API",
+    "url": "http://fccredmond.herokuapp.com/"
+}

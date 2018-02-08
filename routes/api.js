@@ -218,7 +218,7 @@ var getMembersBySkills = async function (req, res, next) {
     var skills = req.query.skills;
     try {
         var members = await database.findMembersBySkills(skills);
-        if (!member || members.length == 0) {
+        if (!members || members.length == 0) {
             res.status(404).send('No members with the skills "' + skills + '" found');
         } else {
             res.status(200).send({

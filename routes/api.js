@@ -30,9 +30,9 @@ var database = require('../model/db.js');
  *  @apiSuccess {String}   profileUrl  Profile path of user on FCC Redmond Site e.g. /member/teja
  *  @apiSuccess {Object}   _id         Database ID of the member
  * 
- * @apiSuccessExample Success-Response:
- * HTTP/1.1 200 OK
- * [
+ *  @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *  [
  *   {
  *       "skills": [
  *           "JavaScript",
@@ -66,26 +66,26 @@ var database = require('../model/db.js');
  *       "profileUrl": "/member/teja",
  *       "email": "apoorva.teja@gmail.com"
  *   }
-*]
+ *  ]
  *
- *@apiError NoMemberFound Empty Array returned if no members found
- *@apiErrorExample Error-Response:   
- *{
+ *  @apiError NoMemberFound Empty Array returned if no members found
+ *  @apiErrorExample Error-Response:   
+ *  {
  *    "error": 500
  *   }
  * 
- * @apiUse OnNotFoundError
+ *  @apiUse OnNotFoundError
  */
 
 var getMembers = async function (req, res, next) {
     if (req.query.hasOwnProperty("skills")) {
-        getMembersBySkills(req,res,next);
+        getMembersBySkills(req, res, next);
     } else {
         try {
             var list = await database.list();
-            res.send(list);
+            res.status(200).send(list);
         } catch (err) {
-            onError(res);
+            onError(res, err);
             console.error(err);
         }
     }
@@ -111,8 +111,8 @@ var getMembers = async function (req, res, next) {
  *  @apiSuccess {String}   profileUrl  Profile path of user on FCC Redmond Site e.g. /member/teja
  *  @apiSuccess {Object}   _id         Database ID of the member
  * 
- * @apiSuccessExample Success-Response:
- * HTTP/1.1 200 OK
+ *  @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
  *    {
  *       "skills": [
  *           "JavaScript",
@@ -132,23 +132,28 @@ var getMembers = async function (req, res, next) {
  *       "email": "apoorva.teja@gmail.com"
  *   }
  *
- * @apiError NoMemberFound  404 Response sent if no member with given last name exists
- * @apiErrorExample Error-Response:   
- * {
- *   "error": 404
- * }
+ *  @apiError NoMemberFound  404 Response sent if no member with given last name exists
+ *  @apiErrorExample Error-Response:   
+ *    {
+ *     "error": 404
+ *    }
  * 
- * @apiUse OnNotFoundError
+ *  @apiUse OnNotFoundError
  */
 
 var getMemberByLastName = async function (req, res, next) {
     var lastName = req.params.lName;
     try {
         var member = await database.findMember(lastName);
-        res.send(member);
+        if (member === 'undefined' || member.length == 0) {
+            res.status(404).send('No members with last name ' + lastName + ' found');
+        } else {
+            res.status(200).send(member);
+        }
+
 
     } catch (err) {
-        onError(res);
+        onError(res, err);
         console.error(err);
     }
 };
@@ -172,8 +177,8 @@ var getMemberByLastName = async function (req, res, next) {
  *  @apiSuccess {String}   profileUrl  Profile path of user on FCC Redmond Site e.g. /member/teja
  *  @apiSuccess {Object}   _id         Database ID of the member
  * 
- * @apiSuccessExample Success-Response:
- * HTTP/1.1 200 OK
+ *  @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
  *    {
  *       "skills": [
  *           "JavaScript",
@@ -193,35 +198,116 @@ var getMemberByLastName = async function (req, res, next) {
  *       "email": "apoorva.teja@gmail.com"
  *   }
  *
- * @apiError NoMemberFound  404 Response sent if no member with given last name exists
- * @apiErrorExample Error-Response:   
- * {
+ *  @apiError NoMemberFound  404 Response sent if no member with given last name exists
+ *  @apiErrorExample Error-Response:   
+ *  {
  *   "error": 404
- * }
+ *  }
  * 
- * @apiUse OnNotFoundError
+ *  @apiUse OnNotFoundError
  */
 
 var getMembersBySkills = async function (req, res, next) {
     var skills = req.query.skills;
     try {
         var members = await database.findMembersBySkills(skills);
-        res.send(members);
-
+        if (members === 'undefined' || members.length == 0) {
+            res.status(404).send('No members with the skills "' + skills + '" found');
+        } else {
+            res.status(200).send(members);
+        }
     } catch (err) {
-        onError(res);
+        onError(res, err);
         console.error(err);
     }
 };
 
-let onError = function (res) {
-    let error = new Error('Server Error');
-    error.status = 500;
-    res.send(error);
+/**
+ *  @api {POST} /api/v0/members/add Request to add new member
+ *  @apiName addMember
+ *  @apiDescription Adds a new member if the member's email doesn't already exist in the database. Rejects if the _id parameter is set and is duplicate
+ *  @apiGroup Members
+ *
+ *  @apiVersion 0.0.1
+ * 
+ *  @apiParam (Request body) {JSON}   memberProfile Object name of the profile
+ *  @apiParam (Request body) {Array}  memberProfile.skills skills of the user your creating
+ *  @apiParam (Request body) {String} memberProfile.lName last name of the member you are creating
+ *  @apiParam (Request body) {String} memberProfile.fName First name of the member you are creating
+ *  @apiParam (Request body) {String} memberProfile.linkedInUrl LinkedIn profile URL of member you are creating
+ *  @apiParam (Request body) {String} memberProfile.gitHubUrl GitHub profile URL of the member you are creating
+ *  @apiParam (Request body) {String} memberProfile.profileUrl FCC Redmond Site Profile URL of the member you are creating
+ *  @apiParam (Request body) {String} memberProfile.email Email alias of the member you are creating
+ * 
+ *  @apiSuccess (Response body) {String}   success   Boolean success indicator. True or False
+ *  @apiSuccess (Response body) {String}   message   Success message with created user ID
+
+ * 
+ *  @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *    {
+ *      "success": true,
+ *      "message": "New member created with ID:5a7ba3bfef8c0146eca3881e"
+ *    }
+ *
+ *  @apiError BadRequest  400 No specific response
+ * 
+ *  @apiError UserExists  422 When the member you are creating has the same email alias of an existing member
+ *  @apiErrorExample Error-Response:
+ *  {
+ *      "success":false,  
+ *      "message": "User Exists!"
+ *  }
+ * 
+ * @apiUse OnNotFoundError
+ */
+var addMember = function (req, res, next) {
+    try {
+        if (req.body.hasOwnProperty("memberProfile")) {
+            let newMember = req.body.memberProfile;
+            if (!newMember.hasOwnProperty("email")) {
+                res.status(422).send({ "success": false, "message": "memberProfile doesn't have email property" });
+            } else {
+                let cb = function (err, member) {
+                    if (err) {
+                        onError(res, err, 500);
+                        return;
+                    }
+                    if (member != 'undefined' || member.hasOwnProperty("_id")) {
+                        res.status(200).send({ "success": true, "message": "New member created with ID:" + member._id });
+                    } else {
+                        onError(res, new Error("Failed to add member"));
+                    }
+                }
+                database.addMember(newMember, cb);
+            }
+        } else {
+            res.status(422).send({ "success": false, "message": "memberProfile wasn't found in the request body" });
+        }
+    } catch (err) {
+        onError(res, err);
+        console.error(err);
+    }
+};
+
+/**
+ * @param {Object} res         response object sent from caller
+ * @param {Object}  error       Error object sent
+ * @param {Number}    statusCode  HTTP error code. Optional. If provided then use it insead of generic 500 error
+ */
+
+let onError = function (res, error, statusCode) {
+
+    if (statusCode && typeof statusCode == "Number") {
+        res.status(statusCode).send(error.message);
+    } else {
+        res.status(500).send(error.message);
+    }
+
 };
 //setup your routes
 router.get('/members', getMembers);
 router.get('/members/:lName', getMemberByLastName);
-
+router.post('/members/add', addMember);
 
 module.exports = router;

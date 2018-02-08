@@ -7,7 +7,7 @@ const DATABASE_URL = process.env.MONGODB_URI || config.database.url;
 
 //define a schema
 var Schema = mongoose.Schema;
-var memberSchema = new Schema({
+const memberSchema = new Schema({
     lastName: String,
     firstName: String,
     skills: Array,
@@ -17,10 +17,23 @@ var memberSchema = new Schema({
     email: String
 });
 
+//validation before save
+memberSchema.pre('save', function (next) {
+    var self = this;
+    members.find({ "email": this.email }, function (err, members) {
+        if (err) {
+            next(err);
+        }
+        if (members.length == 0) {
+            next();
+        } else {
+            console.log('User exists: ' + self.firstName + " " + self.lastName);
+            next(new Error(JSON.stringify({ "success": false, "message": "User Exists!" })));
+        }
+    }).exec();
+});
 //define a model
-var members = mongoose.model('members', memberSchema);
-
-//members.find(listMembers).exec();
+const members = mongoose.model('members', memberSchema);
 
 var listMembers = function (error, members) {
     if (error) {
@@ -115,8 +128,23 @@ module.exports.findMember = function (lName) {
 module.exports.addMember = function(memberObj) {
     return members.insert(memberObj, getMember).exec();
 }
+/**
+ * @param {String} skills Comma separate string of skills to query with
+ */
 module.exports.findMembersBySkills = function (skills) {
     return members.find({
         "skills": { $all: skills.split(",") }
     }, getMembersWithSkills).exec();
+};
+
+/**
+ * @param {Object} memberProfile JSON file with member profile payload 
+ * @param {*}      cb            callback
+ */
+module.exports.addMember = function (memberProfile, cb) {
+    let newMember = new members(memberProfile);
+    newMember.save(function (err, doc) {
+        console.log(doc);
+        cb(err, doc);
+    });
 };

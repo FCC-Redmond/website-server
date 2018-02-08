@@ -175,6 +175,15 @@ var getMemberByLastName = async function (req, res, next) {
     }
 };
 
+var addMember = async function (req, res, next) {
+    try {
+        var member = JSON.parse(req.body);
+        var member = await database.insert(member);
+        res.send('insert completed');
+    } catch (err) {
+        onError();
+    }
+}
 /**
  *  @api {get} /api/v0/members?skills=:skills Request members with the specified skills
  *  @apiName getMemberBySkills
@@ -349,5 +358,6 @@ let onError = function (res, error, statusCode) {
 router.get('/members', getMembers);
 router.get('/members/:lName', getMemberByLastName);
 router.post('/members/add', addMember);
+router.get('members/:skills', getMembersBySkills);
 
 module.exports = router;

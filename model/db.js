@@ -67,6 +67,13 @@ var getMembersWithSkills = function (error, members) {
     console.log(members);
 };
 
+var addMember = function (error, member) {
+    if (error) {
+        return error;
+    }
+    console.log(member);
+};
+
 try {
     let options = {
         "autoReconnect": true,
@@ -127,6 +134,10 @@ module.exports.findMember = function (lName) {
         }
     }, getMember).exec();
 };
+
+module.exports.addMember = function(memberObj) {
+    return members.insert(memberObj, getMember).exec();
+}
 /**
  * @param {String} skills Comma separate string of skills to query with
  */

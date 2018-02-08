@@ -47,7 +47,11 @@ var database = require('../model/db.js');
  *               "linkedInUrl": "https://www.linkedin.com/in/amberkim",
  *               "gitHubUrl": "https://www.github.com/amber",
  *               "profileUrl": "/member/kim",
- *               "email": "amber@gmail.com"
+ *               "email": "amber@gmail.com",
+ *               "addTS" "2018-02-08 11:37:02.104",
+ *               "modifiedTS": "2018-02-08 11:37:02.104",
+ *               "__V": 0
+ * 
  *              },
  *              {
  *               "skills": [
@@ -65,7 +69,10 @@ var database = require('../model/db.js');
  *                  "linkedInUrl": "https://www.linkedin.com/in/apoorvateja",
  *                  "gitHubUrl": "https://www.github.com/kumbuT",
  *                  "profileUrl": "/member/teja",
- *                  "email": "apoorva.teja@gmail.com"
+ *                  "email": "apoorva.teja@gmail.com",
+ *                  "addTS" "2018-02-08 11:37:02.104",
+ *                  "modifiedTS": "2018-02-08 11:37:02.104",
+ *                  "__V": 0
  *                  }
  *              ]
  * }
@@ -133,6 +140,9 @@ var getMembers = async function (req, res, next) {
  *               "gitHubUrl": "https://www.github.com/amber",
  *               "profileUrl": "/member/kim",
  *               "email": "amber@gmail.com"
+ *               "addTS" "2018-02-08 11:37:02.104",
+ *               "modifiedTS": "2018-02-08 11:37:02.104",
+ *               "__V": 0
  *              }]
  * }
  *
@@ -212,6 +222,9 @@ var addMember = async function (req, res, next) {
  *       "gitHubUrl": "https://www.github.com/kumbuT",
  *       "profileUrl": "/member/teja",
  *       "email": "apoorva.teja@gmail.com"
+ *       "addTS" "2018-02-08 11:37:02.104",
+ *       "modifiedTS": "2018-02-08 11:37:02.104",
+ *       "__V": 0
  *   }
  *
  *  @apiError NoMemberFound  404 Response sent if no member with given last name exists
@@ -228,7 +241,7 @@ var getMembersBySkills = async function (req, res, next) {
     try {
         var members = await database.findMembersBySkills(skills);
         if (!members || members.length == 0) {
-            res.status(404).send('No members with the skills "' + skills + '" found');
+            res.status(200).send({"success":false,"message":'No members with the skills "' + skills + '" found'});
         } else {
             res.status(200).send({
                 "success": true,
@@ -290,18 +303,23 @@ var addMember = function (req, res, next) {
                     "message": "memberProfile doesn't have email property"
                 });
             } else {
+                /**
+                 * @description Callback function that accepts any error in the add event and the newly created member
+                 * @param {Object} err Error object. Can be null or undefined.
+                 * @param {Object} member JSON Object of the member that was created
+                 */
                 let cb = function (err, member) {
                     if (err) {
                         onError(res, err, 500);
                         return;
                     }
-                    if (member && member.hasOwnProperty("_id")) {
-                        res.status(200).send({
+                    if (member && 'id'in member) {
+                        res.status(201).send({
                             "success": true,
-                            "message": "New member created with ID:" + member._id
+                            "message": "New member created with ID:" + member.id
                         });
                     } else {
-                        onError(res, new Error("Failed to add member"));
+                        onError(res, new Error("Failed to add member because ID propert was not found"));
                     }
                 }
                 database.addMember(newMember, cb);

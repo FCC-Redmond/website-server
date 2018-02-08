@@ -14,7 +14,17 @@ const memberSchema = new Schema({
     profileUrl: String,
     linkedInUrl: String,
     gitHubUrl: String,
-    email: String
+    email: String,
+    addTS: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    modifiedTS:{
+        type: Date,
+        required: true,
+        default: Date.now
+    }
 });
 
 //validation before save
@@ -70,7 +80,7 @@ try {
         "reconnectTries": Number.MAX_VALUE,
         "reconnectInterval": 500
     };
-    mongoose.Promise = Promise;
+    mongoose.Promise = global.Promise;
     mongoose.connect(DATABASE_URL, options).then(function () {
         console.info(`Mongoose connection successfully created`);
     }).catch(function (error) {
@@ -144,7 +154,7 @@ module.exports.findMembersBySkills = function (skills) {
 module.exports.addMember = function (memberProfile, cb) {
     let newMember = new members(memberProfile);
     newMember.save(function (err, doc) {
-        console.log(doc);
+        console.debug(doc);
         cb(err, doc);
     });
 };

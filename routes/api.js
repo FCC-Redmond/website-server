@@ -355,9 +355,9 @@ let onError = function (res, error, statusCode) {
 
 };
 //setup your routes
-router.post('/member', addMember);
 router.get('/members', getMembers);
 router.get('/members/:lName', getMemberByLastName);
 router.post('/members/add', addMember);
+router.get('members/:skills', getMembersBySkills);
 
 module.exports = router;

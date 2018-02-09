@@ -67,13 +67,6 @@ var getMembersWithSkills = function (error, members) {
     console.log(members);
 };
 
-var addMember = function (error, member) {
-    if (error) {
-        return error;
-    }
-    console.log(member);
-};
-
 try {
     let options = {
         "autoReconnect": true,

@@ -124,7 +124,7 @@ var getMembers = async function (req, res, next) {
  * 
  *  @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
-  *  {"success":true,
+ *  {"success":true,
  *   "message": [
  *              {
  *                   "skills": [
@@ -232,7 +232,10 @@ var getMembersBySkills = async function (req, res, next) {
     try {
         var members = await database.findMembersBySkills(skills);
         if (!members || members.length == 0) {
-            res.status(200).send({"success":false,"message":'No members with the skills "' + skills + '" found'});
+            res.status(200).send({
+                "success": false,
+                "message": 'No members with the skills "' + skills + '" found'
+            });
         } else {
             res.status(200).send({
                 "success": true,
@@ -267,7 +270,7 @@ var getMembersBySkills = async function (req, res, next) {
 
  * 
  *  @apiSuccessExample Success-Response:
- *  HTTP/1.1 200 OK
+ *  HTTP/1.1 201 OK
  *    {
  *      "success": true,
  *      "message": "New member created with ID:5a7ba3bfef8c0146eca3881e"
@@ -304,7 +307,7 @@ var addMember = function (req, res, next) {
                         onError(res, err, 500);
                         return;
                     }
-                    if (member && 'id'in member) {
+                    if (member && 'id' in member) {
                         res.status(201).send({
                             "success": true,
                             "message": "New member created with ID:" + member.id
@@ -328,6 +331,88 @@ var addMember = function (req, res, next) {
 };
 
 /**
+ *  @api {PUT} /api/v0/members/:memberID/update Request to update member profile
+ *  @apiName updateMember
+ *  @apiDescription Adds a new member if the member's email doesn't already exist in the database. Rejects if the _id parameter is set and is duplicate
+ *  @apiGroup Members
+ *
+ *  @apiVersion 0.0.1
+ * 
+ *  @apiParam (Request body) {JSON}   memberProfile Object name of the profile
+ *  @apiParam (Request body) {Array}  memberProfile.skills skills of the user your creating
+ *  @apiParam (Request body) {String} memberProfile.lName last name of the member you are creating
+ *  @apiParam (Request body) {String} memberProfile.fName First name of the member you are creating
+ *  @apiParam (Request body) {String} memberProfile.linkedInUrl LinkedIn profile URL of member you are creating
+ *  @apiParam (Request body) {String} memberProfile.gitHubUrl GitHub profile URL of the member you are creating
+ *  @apiParam (Request body) {String} memberProfile.profileUrl FCC Redmond Site Profile URL of the member you are creating
+ *  @apiParam (Request body) {String} memberProfile.email Email alias of the member you are creating
+ * 
+ *  @apiSuccess (Response body) {String}   success   Boolean success indicator. True or False
+ *  @apiSuccess (Response body) {String}   message   Success message with created user ID
+
+ * 
+ *  @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *    {
+ *      "success": true,
+ *      "message": "Member profile with id: 5a7d0e48e7e0d91ee810ffa4 was updated.",
+ *      "data": {
+ *                  "skills": [
+ *                              "JavaScript",
+ *                              "Html5"
+ *                              ],
+ *                  "addTS": "2018-02-09T02:58:16.164Z",
+ *                  "modifiedTS": "2018-02-09T02:58:16.164Z",
+ *                  "_id": "5a7d0e48e7e0d91ee810ffa4",
+ *                  "lastName": "Smith",
+ *                  "firstName": "Sam",
+ *                  "profileUrl": "/members/Smith",
+ *                  "linkedInUrl": "https://www.linkedin.com/in/smith",
+ *                  "gitHubUrl": "https://github.com/smith",
+ *                  "email": "smith@gmail.com",
+ *                  "__v": 0
+ *              }
+ *    }
+ *
+ *  @apiError BadRequest  400 No specific response
+ * 
+ *  @apiUse OnNotFoundError
+ */
+var updateMember = async function (req, res, next) {
+    try {
+        if (req.body.hasOwnProperty("memberProfile")) {
+            let memberProfile = req.body.memberProfile;
+            let memberId = req.params.id;
+            /**
+             * 
+             * @param {Object} error                    Error object. Can be null or undefined
+             * @param {*}      updatedMemberProfile     The updated Member Profile for caller validation
+             */
+            let cb = function (error, updatedMemberProfile) {
+                if (error) {
+                    onError(res, error, 500);
+                    return;
+                } else {
+                    res.status(200).send({
+                        "success": true,
+                        "message": "Member profile with id: " + memberId + " was updated.",
+                        "data"   : updatedMemberProfile
+                    });
+                }
+            }
+            await database.updateMember(memberProfile,memberId,cb);
+        } else {
+            res.status(422).send({
+                "success": false,
+                "message": "memberProfile wasn't found in the request body"
+            });
+        }
+    } catch (err) {
+        onError(res, err);
+        console.error(err);
+    }
+};
+/**
  * @param {Object} res         response object sent from caller
  * @param {Object} error       Error object sent
  * @param {Number} statusCode  HTTP error code. Optional. If provided then use it insead of generic 500 error
@@ -350,5 +435,5 @@ router.get('/members', getMembers);
 router.get('/members/:lName', getMemberByLastName);
 router.post('/members/add', addMember);
 router.get('/members/:skills', getMembersBySkills);
-
+router.put('/members/:id/update', updateMember);
 module.exports = router;

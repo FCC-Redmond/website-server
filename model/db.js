@@ -20,7 +20,7 @@ const memberSchema = new Schema({
         required: true,
         default: Date.now
     },
-    modifiedTS:{
+    modifiedTS: {
         type: Date,
         required: true,
         default: Date.now
@@ -30,7 +30,9 @@ const memberSchema = new Schema({
 //validation before save
 memberSchema.pre('save', function (next) {
     var self = this;
-    members.find({ "email": this.email }, function (err, members) {
+    members.find({
+        "email": this.email
+    }, function (err, members) {
         if (err) {
             next(err);
         }
@@ -38,7 +40,10 @@ memberSchema.pre('save', function (next) {
             next();
         } else {
             console.log('User exists: ' + self.firstName + " " + self.lastName);
-            next(new Error(JSON.stringify({ "success": false, "message": "User Exists!" })));
+            next(new Error(JSON.stringify({
+                "success": false,
+                "message": "User Exists!"
+            })));
         }
     }).exec();
 });
@@ -84,8 +89,8 @@ try {
     // When successfully connected
     mongoose.connection.on('connected', function () {
         /**
-        * Start the webserver when connection is established
-        */
+         * Start the webserver when connection is established
+         */
         require('../server.js').startup();
         console.log('Mongoose default connection open to ' + DATABASE_URL);
     });
@@ -128,7 +133,7 @@ module.exports.findMember = function (lName) {
     }, getMember).exec();
 };
 
-module.exports.addMember = function(memberObj) {
+module.exports.addMember = function (memberObj) {
     return members.insert(memberObj, getMember).exec();
 }
 /**
@@ -136,7 +141,9 @@ module.exports.addMember = function(memberObj) {
  */
 module.exports.findMembersBySkills = function (skills) {
     return members.find({
-        "skills": { $all: skills.split(",") }
+        "skills": {
+            $all: skills.split(",")
+        }
     }, getMembersWithSkills).exec();
 };
 
@@ -145,9 +152,40 @@ module.exports.findMembersBySkills = function (skills) {
  * @param {*}      cb            callback
  */
 module.exports.addMember = function (memberProfile, cb) {
+    cb = typeof (cb) === 'function' ? cb : function () {};
     let newMember = new members(memberProfile);
     newMember.save(function (err, doc) {
         console.debug(doc);
         cb(err, doc);
+    });
+};
+
+/**
+ * 
+ * @param {Object} memberProfile  Member profile object that has the updates requester by caller
+ * @param {String} memberId       Member ID
+ * @param {*}      cb             Callback function  
+ */
+module.exports.updateMember = function (memberProfile, memberId, cb) {
+    //check whether the callback is a callable function
+    cb = typeof (cb) === 'function' ? cb : function () {};
+
+    //build your update object with modifiedTS updated
+    let keyVal = {};
+    for (var item in memberProfile) {
+        if (memberProfile.hasOwnProperty(item)) {
+            if (item === "modifiedTS") {
+                keyVal[item] = Date.now();
+            } else {
+                keyVal[item] = memberProfile[item];
+            }
+        }
+    }
+    members.findByIdAndUpdate(memberId, {
+        $set: keyVal
+    }, {
+        new: true
+    }, function (error, updatedMember) {
+        cb(error, updatedMember);
     });
 };

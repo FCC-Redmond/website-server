@@ -10,7 +10,7 @@ var Schema = mongoose.Schema;
 const memberSchema = new Schema({
     lastName: String,
     firstName: String,
-    skills: Array,
+    skills: [],
     profileUrl: String,
     linkedInUrl: String,
     gitHubUrl: String,
@@ -65,6 +65,7 @@ var getMember = function (error, member) {
     }
     console.log(member);
 };
+
 var getMembersWithSkills = function (error, members) {
     if (error) {
         return error;
@@ -133,9 +134,6 @@ module.exports.findMember = function (lName) {
     }, getMember).exec();
 };
 
-module.exports.addMember = function (memberObj) {
-    return members.insert(memberObj, getMember).exec();
-}
 /**
  * @param {String} skills Comma separate string of skills to query with
  */

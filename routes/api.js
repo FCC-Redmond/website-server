@@ -288,13 +288,14 @@ var getMembersBySkills = async function (req, res, next) {
  * @apiUse OnNotFoundError
  */
 var addMember = function (req, res, next) {
+    console.log('req body', req.body);
     try {
-        if (req.body.hasOwnProperty("memberProfile")) {
-            let newMember = req.body.memberProfile;
-            if (!newMember.hasOwnProperty("email")) {
+        if (req.body.email) {
+            let newMember = req.body;
+            if (!newMember.email) {
                 res.status(422).send({
                     "success": false,
-                    "message": "memberProfile doesn't have email property"
+                    "message": "memberProfile doesn't have last name"
                 });
             } else {
                 /**

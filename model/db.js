@@ -17,13 +17,10 @@ const memberSchema = new Schema({
     email: String,
     addTS: {
         type: Date,
-        required: true,
-        default: Date.now
+        required: true
     },
     modifiedTS: {
-        type: Date,
-        required: true,
-        default: Date.now
+        type: Date
     }
 });
 
@@ -133,18 +130,19 @@ module.exports.findMember = function (lName) {
     }, getMember).exec();
 };
 
-module.exports.addMember = function (memberObj) {
-    return members.insert(memberObj, getMember).exec();
-}
 /**
  * @param {String} skills Comma separate string of skills to query with
  */
 module.exports.findMembersBySkills = function (skills) {
-    return members.find({
-        "skills": {
-            $all: skills.split(",")
+    skills = skills.split(",");
+    skills.forEach((cur, index, array) => {
+        skills[index] = {
+            "skills": {$regex: new RegExp(cur,"i")}
         }
-    }, getMembersWithSkills).exec();
+    })
+    return members.find({
+        $and: skills
+    }).exec();
 };
 
 /**
@@ -180,6 +178,10 @@ module.exports.updateMember = function (memberProfile, memberId, cb) {
                 keyVal[item] = memberProfile[item];
             }
         }
+    }
+    //In case caller didn't send modified TS
+    if (!('modifiedTS' in keyVal)) {
+        keyVal.modifiedTS = Date.now();
     }
     members.findByIdAndUpdate(memberId, {
         $set: keyVal

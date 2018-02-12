@@ -316,6 +316,9 @@ var addMember = function (req, res, next) {
                         onError(res, new Error("Failed to add member because ID propert was not found"));
                     }
                 }
+                //setup the addTS and modifiedTS
+                newMember.addTS = Date.now();
+                newMember.modifiedTS = "";
                 database.addMember(newMember, cb);
             }
         } else {
@@ -392,15 +395,17 @@ var updateMember = async function (req, res, next) {
                 if (error) {
                     onError(res, error, 500);
                     return;
+                } else if (!updatedMemberProfile) {
+                    onError(res, new Error("Invalid ID sent. Nothing was updated"), 400);
                 } else {
                     res.status(200).send({
                         "success": true,
                         "message": "Member profile with id: " + memberId + " was updated.",
-                        "data"   : updatedMemberProfile
+                        "data": updatedMemberProfile
                     });
                 }
             }
-            await database.updateMember(memberProfile,memberId,cb);
+            await database.updateMember(memberProfile, memberId, cb);
         } else {
             res.status(422).send({
                 "success": false,

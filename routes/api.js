@@ -388,6 +388,10 @@ var updateMember = async function (req, res, next) {
         if (req.body.hasOwnProperty("memberProfile")) {
             let memberProfile = req.body.memberProfile;
             let memberId = req.params.id;
+            if (checkMongoDbId(member)) {
+                onError(res, new Error("The provided ID is not a valid mongoDb ID"), 500);
+                return;
+            }
             /**
              * 
              * @param {Object} error                    Error object. Can be null or undefined
@@ -423,7 +427,7 @@ var updateMember = async function (req, res, next) {
 let removeMember = function (req, res, next) {
     try {
         let memberId = req.params.id;
-        if (!memberId.match(/^[0-9a-fA-F]{24}$/)) {
+        if (checkMongoDbId(memberId)) {
             onError(res, new Error("The provided ID is not a valid mongoDb ID"), 500);
             return;
         }
@@ -452,6 +456,21 @@ let removeMember = function (req, res, next) {
         console.error(err);
     }
 };
+
+/**
+ * 
+ * @param {*} ObjectId 
+ */
+let checkMongoDbId = function (id) {
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+        return false;
+    } else {
+        return true;
+    }
+};
+
+
+
 /**
  * @param {Object} res         response object sent from caller
  * @param {Object} error       Error object sent

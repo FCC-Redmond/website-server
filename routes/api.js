@@ -1,15 +1,17 @@
 'use strict';
 
-var express = require('express');
-var router = express.Router();
-var database = require('../model/db.js');
+const express = require('express');
+const router = express.Router();
+const database = require('../model/db.js');
+
 /**
  * @apiDefine OnNotFoundError Resource not found error
  * 
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 404 Not Found
  *   {
- *    "error": "Not Found"
+ *        "success": false,
+ *        "error": "Not Found"
  *   }
  */
 
@@ -417,6 +419,39 @@ var updateMember = async function (req, res, next) {
         console.error(err);
     }
 };
+
+let removeMember = function (req, res, next) {
+    try {
+        let memberId = req.params.id;
+        if (!memberId.match(/^[0-9a-fA-F]{24}$/)) {
+            onError(res, new Error("The provided ID is not a valid mongoDb ID"), 500);
+            return;
+        }
+        let cb = function (err, member) {
+            if (err) {
+                onError(res, err);
+                console.error(err);
+                return;
+            }
+            if (!member) {
+                res.status(404).send({
+                    "status": false,
+                    "message": "No member with the provided ID " + memberId + " found"
+                });
+            } else {
+                res.status(200).send({
+                    "success": true,
+                    "message": "Member with ID:" + memberId + " removed."
+                });
+            }
+        }
+
+        database.removeMember(memberId, cb);
+    } catch (err) {
+        onError(res, err);
+        console.error(err);
+    }
+};
 /**
  * @param {Object} res         response object sent from caller
  * @param {Object} error       Error object sent
@@ -441,4 +476,5 @@ router.get('/members/:lName', getMemberByLastName);
 router.post('/members/add', addMember);
 router.get('/members/:skills', getMembersBySkills);
 router.put('/members/:id/update', updateMember);
+router.delete('/members/:id/delete', removeMember);
 module.exports = router;

@@ -69,6 +69,14 @@ var getMembersWithSkills = function (error, members) {
     console.log(members);
 };
 
+
+
+/**
+ * Initialize Mongoose adapter for MongoDB. If connection fails on first attempt, no further attempts to connect 
+ * is made. This is a fail fast strategy. If connected to DB then web server is started.
+ * If connection fails after initial connection then unlimited reconnect attempts will be made. Web server will be 
+ * shutdown until successful connection is established
+ */
 try {
     let options = {
         "autoReconnect": true,
@@ -137,7 +145,9 @@ module.exports.findMembersBySkills = function (skills) {
     skills = skills.split(",");
     skills.forEach((cur, index, array) => {
         skills[index] = {
-            "skills": {$regex: new RegExp(cur,"i")}
+            "skills": {
+                $regex: new RegExp(cur, "i")
+            }
         }
     })
     return members.find({
@@ -189,5 +199,17 @@ module.exports.updateMember = function (memberProfile, memberId, cb) {
         new: true
     }, function (error, updatedMember) {
         cb(error, updatedMember);
+    });
+};
+
+/**
+ * 
+ * @param {*} id ObjectId of member to be removed 
+ * @param {*} cb Callback function 
+ */
+module.exports.removeMember = function (id, cb) {
+    cb = typeof (cb) === 'function' ? cb : function () {};
+    members.findByIdAndRemove(id, function(err, removedMember){
+        cb(err,removedMember);
     });
 };

@@ -21,7 +21,7 @@ const database = require('../model/members.js');
  *  @apiDescription Retrieves all members in database
  *  @apiGroup Members
  *
- *  @apiVersion 0.0.1
+ *  @apiVersion 0.0.2
  *  
  *  @apiSuccess {String}   firstName   Firstname of member
  *  @apiSuccess {String}   lastName    LastName of member 
@@ -122,7 +122,7 @@ var getMembers = async function (req, res, next) {
  *  @apiDescription Retrieves one member in database with the given last name. <i>Currently retrieves only one successful last name match.</i> 
  *  @apiGroup Members
  *
- *  @apiVersion 0.0.1
+ *  @apiVersion 0.0.2
  * 
  *  @apiParam {String} lName Last Name of the member who's profile you want to retrieve
  *  
@@ -203,7 +203,7 @@ var getMemberByLastName = async function (req, res, next) {
  *  @apiDescription Retrieves members with all the skills specified in the query string parameter "skills". <i>Note that skills query string parameter is a comma separated value of the skills and is case sensitive</i>
  *  @apiGroup Members
  *
- *  @apiVersion 0.0.1
+ *  @apiVersion 0.0.2
  * 
  *  @apiParam {String} skills The skills you want to find members by
  *  
@@ -284,7 +284,7 @@ var getMembersBySkills = async function (req, res, next) {
  *  @apiDescription Adds a new member if the member's email doesn't already exist in the database. Rejects if the _id parameter is set and is duplicate
  *  @apiGroup Members
  *
- *  @apiVersion 0.0.1
+ *  @apiVersion 0.0.2
  * 
  *  @apiParam (Request body) {JSON}   memberProfile Object name of the profile
  *  @apiParam (Request body) {Array}  memberProfile.skills skills of the user your creating
@@ -369,7 +369,7 @@ var addMember = function (req, res, next) {
  *  @apiDescription Update a member profile if their ID is valid and they exist in database
  *  @apiGroup Members
  *
- *  @apiVersion 0.0.1
+ *  @apiVersion 0.0.2
  * 
  *  @apiParam (Request body) {JSON}   memberProfile Object name of the profile
  *  @apiParam (Request body) {Array}  memberProfile.skills skills of the user your creating
@@ -459,7 +459,7 @@ var updateMember = async function (req, res, next) {
  *  @apiDescription Remove a member if their ID is valid and they're in DB
  *  @apiGroup Members
  *
- *  @apiVersion 0.0.1
+ *  @apiVersion 0.0.2
  * 
  * 
  *  @apiSuccess (Response body) {Boolean}   success   Boolean success indicator. True or False

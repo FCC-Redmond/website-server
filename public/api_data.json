@@ -6,7 +6,7 @@
     "name": "GetMembers",
     "description": "<p>Retrieves all members in database</p>",
     "group": "Members",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "success": {
       "fields": {
         "Success 200": [
@@ -133,7 +133,7 @@
     "name": "addMember",
     "description": "<p>Adds a new member if the member's email doesn't already exist in the database. Rejects if the _id parameter is set and is duplicate</p>",
     "group": "Members",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "parameter": {
       "fields": {
         "Request body": [
@@ -263,7 +263,7 @@
     "name": "getMemberByLastName",
     "description": "<p>Retrieves one member in database with the given last name. <i>Currently retrieves only one successful last name match.</i></p>",
     "group": "Members",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -403,7 +403,7 @@
     "name": "getMemberBySkills",
     "description": "<p>Retrieves members with all the skills specified in the query string parameter &quot;skills&quot;. <i>Note that skills query string parameter is a comma separated value of the skills and is case sensitive</i></p>",
     "group": "Members",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -543,7 +543,7 @@
     "name": "removeMember",
     "description": "<p>Remove a member if their ID is valid and they're in DB</p>",
     "group": "Members",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "success": {
       "fields": {
         "Response body": [
@@ -600,7 +600,7 @@
     "name": "updateMember",
     "description": "<p>Update a member profile if their ID is valid and they exist in database</p>",
     "group": "Members",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "parameter": {
       "fields": {
         "Request body": [

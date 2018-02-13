@@ -94,7 +94,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": " HTTP/1.1 200 OK\n {\"success\":true,\n  \"message\": [\n             {\n                  \"skills\": [\n                  \"JavaScript\",\n                  \"NodeJs\",\n                  \"ExpressJs\",\n                \"MongoDB\"\n              ],\n              \"_id\": \"5a78d098670168148c5ebb52\",\n              \"lastName\": \"Kim\",\n              \"firstName\": \"Amber\",\n              \"linkedInUrl\": \"https://www.linkedin.com/in/amberkim\",\n              \"gitHubUrl\": \"https://www.github.com/amber\",\n              \"profileUrl\": \"/member/kim\",\n              \"email\": \"amber@gmail.com\",\n              \"addTS\" \"2018-02-08 11:37:02.104\",\n              \"modifiedTS\": \"2018-02-08 11:37:02.104\",\n              \"__V\": 0\n\n             },\n             {\n              \"skills\": [\n                         \"JavaScript\",\n                         \"C#\",\n                         \"Azure\",\n                         \"NodeJs\",\n                         \"ExpressJs\",\n                         \"MongoDB\",\n                         \"REDIS\"\n                         ],\n                 \"_id\": \"5a78d145670168148c5ebb54\",\n                 \"lastName\": \"Teja\",\n                 \"firstName\": \"Apoorva\",\n                 \"linkedInUrl\": \"https://www.linkedin.com/in/apoorvateja\",\n                 \"gitHubUrl\": \"https://www.github.com/kumbuT\",\n                 \"profileUrl\": \"/member/teja\",\n                 \"email\": \"apoorva.teja@gmail.com\",\n                 \"addTS\" \"2018-02-08 11:37:02.104\",\n                 \"modifiedTS\": \"2018-02-08 11:37:02.104\",\n                 \"__V\": 0\n                 }\n             ]\n}",
+          "content": " HTTP/1.1 200 OK\n {\"success\":true,\n  \"message\": \"Found 2 members in database\", \n     \"data\": [\n             {\n                  \"skills\": [\n                  \"JavaScript\",\n                  \"NodeJs\",\n                  \"ExpressJs\",\n                \"MongoDB\"\n              ],\n              \"_id\": \"5a78d098670168148c5ebb52\",\n              \"lastName\": \"Kim\",\n              \"firstName\": \"Amber\",\n              \"linkedInUrl\": \"https://www.linkedin.com/in/amberkim\",\n              \"gitHubUrl\": \"https://www.github.com/amber\",\n              \"profileUrl\": \"/member/kim\",\n              \"email\": \"amber@gmail.com\",\n              \"addTS\" \"2018-02-08 11:37:02.104\",\n              \"modifiedTS\": \"2018-02-08 11:37:02.104\",\n              \"__V\": 0\n\n             },\n             {\n              \"skills\": [\n                         \"JavaScript\",\n                         \"C#\",\n                         \"Azure\",\n                         \"NodeJs\",\n                         \"ExpressJs\",\n                         \"MongoDB\",\n                         \"REDIS\"\n                         ],\n                 \"_id\": \"5a78d145670168148c5ebb54\",\n                 \"lastName\": \"Teja\",\n                 \"firstName\": \"Apoorva\",\n                 \"linkedInUrl\": \"https://www.linkedin.com/in/apoorvateja\",\n                 \"gitHubUrl\": \"https://www.github.com/kumbuT\",\n                 \"profileUrl\": \"/member/teja\",\n                 \"email\": \"apoorva.teja@gmail.com\",\n                 \"addTS\" \"2018-02-08 11:37:02.104\",\n                 \"modifiedTS\": \"2018-02-08 11:37:02.104\",\n                 \"__V\": 0\n                 }\n             ]\n}",
           "type": "json"
         }
       ]
@@ -538,7 +538,7 @@
   },
   {
     "type": "DELETE",
-    "url": "/api/v0/members/:memberID/delete",
+    "url": "/api/v0/members/:memberID",
     "title": "Request to remove member profile",
     "name": "removeMember",
     "description": "<p>Remove a member if their ID is valid and they're in DB</p>",
@@ -595,7 +595,7 @@
   },
   {
     "type": "PUT",
-    "url": "/api/v0/members/:memberID/update",
+    "url": "/api/v0/members/:memberID",
     "title": "Request to update member profile",
     "name": "updateMember",
     "description": "<p>Update a member profile if their ID is valid and they exist in database</p>",

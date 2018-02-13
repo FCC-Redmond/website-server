@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const database = require('../model/db.js');
+const database = require('../model/members.js');
 
 /**
  * @apiDefine OnNotFoundError Resource not found error
@@ -38,7 +38,8 @@ const database = require('../model/db.js');
  *  @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {"success":true,
- *   "message": [
+ *   "message": "Found 2 members in database", 
+ *      "data": [
  *              {
  *                   "skills": [
  *                   "JavaScript",
@@ -96,9 +97,15 @@ var getMembers = async function (req, res, next) {
     } else {
         try {
             var list = await database.list();
+            let message = "";
+            switch (list.length) {
+                case 0: message = "No members in database"; break;
+                case 1: message = "Found 1 member in database"; break;
+                default: message = "Found " + list.length + " members in database"; break;
+            }
             res.status(200).send({
                 "success": true,
-                "message": "Found " + list.length + " members in database with the skills +" + skills,
+                "message": message,
                 "data": list
             });
         } catch (err) {
@@ -357,7 +364,7 @@ var addMember = function (req, res, next) {
 };
 
 /**
- *  @api {PUT} /api/v0/members/:memberID/update Request to update member profile
+ *  @api {PUT} /api/v0/members/:memberID Request to update member profile
  *  @apiName updateMember
  *  @apiDescription Update a member profile if their ID is valid and they exist in database
  *  @apiGroup Members
@@ -410,7 +417,7 @@ var updateMember = async function (req, res, next) {
         if (req.body.hasOwnProperty("memberProfile")) {
             let memberProfile = req.body.memberProfile;
             let memberId = req.params.id;
-            if (checkMongoDbId(member)) {
+            if (!checkMongoDbId(memberId)) {
                 onError(res, new Error("The provided ID is not a valid mongoDb ID"), 500);
                 return;
             }
@@ -447,7 +454,7 @@ var updateMember = async function (req, res, next) {
 };
 
 /**
- *  @api {DELETE} /api/v0/members/:memberID/delete Request to remove member profile
+ *  @api {DELETE} /api/v0/members/:memberID Request to remove member profile
  *  @apiName removeMember
  *  @apiDescription Remove a member if their ID is valid and they're in DB
  *  @apiGroup Members
@@ -471,7 +478,7 @@ var updateMember = async function (req, res, next) {
 let removeMember = function (req, res, next) {
     try {
         let memberId = req.params.id;
-        if (checkMongoDbId(memberId)) {
+        if (!checkMongoDbId(memberId)) {
             onError(res, new Error("The provided ID is not a valid mongoDb ID"), 500);
             return;
         }
@@ -506,14 +513,8 @@ let removeMember = function (req, res, next) {
  * @param {*} ObjectId 
  */
 let checkMongoDbId = function (id) {
-    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-        return false;
-    } else {
-        return true;
-    }
+    return /^[0-9a-fA-F]{24}$/g.test(id);
 };
-
-
 
 /**
  * @param {Object} res         response object sent from caller
@@ -537,7 +538,6 @@ let onError = function (res, error, statusCode) {
 router.get('/members', getMembers);
 router.get('/members/:lName', getMemberByLastName);
 router.post('/members/add', addMember);
-router.get('/members/:skills', getMembersBySkills);
-router.put('/members/:id/update', updateMember);
-router.delete('/members/:id/delete', removeMember);
+router.put('/members/:id', updateMember);
+router.delete('/members/:id', removeMember);
 module.exports = router;

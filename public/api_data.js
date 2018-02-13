@@ -66,12 +66,35 @@ define({ "api": [
             "field": "_id",
             "description": "<p>Database ID of the member</p>"
           }
+        ],
+        "Response body": [
+          {
+            "group": "Response body",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Boolean success indicator. True or False</p>"
+          },
+          {
+            "group": "Response body",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Success message with updated user ID</p>"
+          },
+          {
+            "group": "Response body",
+            "type": "JSON",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Member profiles</p>"
+          }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n[\n {\n     \"skills\": [\n         \"JavaScript\",\n         \"NodeJs\",\n         \"ExpressJs\",\n         \"MongoDB\"\n     ],\n     \"_id\": \"5a78d098670168148c5ebb52\",\n     \"lastName\": \"Kim\",\n     \"firstName\": \"Amber\",\n     \"linkedInUrl\": \"https://www.linkedin.com/in/amberkim\",\n     \"gitHubUrl\": \"https://www.github.com/amber\",\n     \"profileUrl\": \"/member/kim\",\n     \"email\": \"amber@gmail.com\"\n },\n {\n     \"skills\": [\n         \"JavaScript\",\n         \"C#\",\n         \"Azure\",\n         \"NodeJs\",\n         \"ExpressJs\",\n         \"MongoDB\",\n         \"REDIS\"\n     ],\n     \"_id\": \"5a78d145670168148c5ebb54\",\n     \"lastName\": \"Teja\",\n     \"firstName\": \"Apoorva\",\n     \"linkedInUrl\": \"https://www.linkedin.com/in/apoorvateja\",\n     \"gitHubUrl\": \"https://www.github.com/kumbuT\",\n     \"profileUrl\": \"/member/teja\",\n     \"email\": \"apoorva.teja@gmail.com\"\n }\n]",
+          "content": " HTTP/1.1 200 OK\n {\"success\":true,\n  \"message\": [\n             {\n                  \"skills\": [\n                  \"JavaScript\",\n                  \"NodeJs\",\n                  \"ExpressJs\",\n                \"MongoDB\"\n              ],\n              \"_id\": \"5a78d098670168148c5ebb52\",\n              \"lastName\": \"Kim\",\n              \"firstName\": \"Amber\",\n              \"linkedInUrl\": \"https://www.linkedin.com/in/amberkim\",\n              \"gitHubUrl\": \"https://www.github.com/amber\",\n              \"profileUrl\": \"/member/kim\",\n              \"email\": \"amber@gmail.com\",\n              \"addTS\" \"2018-02-08 11:37:02.104\",\n              \"modifiedTS\": \"2018-02-08 11:37:02.104\",\n              \"__V\": 0\n\n             },\n             {\n              \"skills\": [\n                         \"JavaScript\",\n                         \"C#\",\n                         \"Azure\",\n                         \"NodeJs\",\n                         \"ExpressJs\",\n                         \"MongoDB\",\n                         \"REDIS\"\n                         ],\n                 \"_id\": \"5a78d145670168148c5ebb54\",\n                 \"lastName\": \"Teja\",\n                 \"firstName\": \"Apoorva\",\n                 \"linkedInUrl\": \"https://www.linkedin.com/in/apoorvateja\",\n                 \"gitHubUrl\": \"https://www.github.com/kumbuT\",\n                 \"profileUrl\": \"/member/teja\",\n                 \"email\": \"apoorva.teja@gmail.com\",\n                 \"addTS\" \"2018-02-08 11:37:02.104\",\n                 \"modifiedTS\": \"2018-02-08 11:37:02.104\",\n                 \"__V\": 0\n                 }\n             ]\n}",
           "type": "json"
         }
       ]
@@ -95,7 +118,7 @@ define({ "api": [
         },
         {
           "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n {\n  \"error\": \"Not Found\"\n }",
+          "content": "HTTP/1.1 404 Not Found\n {\n      \"success\": false,\n      \"error\": \"Not Found\"\n }",
           "type": "json"
         }
       ]
@@ -195,7 +218,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n  {\n    \"success\": true,\n    \"message\": \"New member created with ID:5a7ba3bfef8c0146eca3881e\"\n  }",
+          "content": "HTTP/1.1 201 OK\n  {\n    \"success\": true,\n    \"message\": \"New member created with ID:5a7ba3bfef8c0146eca3881e\"\n  }",
           "type": "json"
         }
       ]
@@ -225,7 +248,7 @@ define({ "api": [
         },
         {
           "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n {\n  \"error\": \"Not Found\"\n }",
+          "content": "HTTP/1.1 404 Not Found\n {\n      \"success\": false,\n      \"error\": \"Not Found\"\n }",
           "type": "json"
         }
       ]
@@ -313,12 +336,35 @@ define({ "api": [
             "field": "_id",
             "description": "<p>Database ID of the member</p>"
           }
+        ],
+        "Response body": [
+          {
+            "group": "Response body",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Boolean success indicator. True or False</p>"
+          },
+          {
+            "group": "Response body",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Success message with updated user ID</p>"
+          },
+          {
+            "group": "Response body",
+            "type": "JSON",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Member profiles</p>"
+          }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n  {\n     \"skills\": [\n         \"JavaScript\",\n         \"C#\",\n         \"Azure\",\n         \"NodeJs\",\n         \"ExpressJs\",\n         \"MongoDB\",\n         \"REDIS\"\n     ],\n     \"_id\": \"5a78d145670168148c5ebb54\",\n     \"lastName\": \"Teja\",\n     \"firstName\": \"Apoorva\",\n     \"linkedInUrl\": \"https://www.linkedin.com/in/apoorvateja\",\n     \"gitHubUrl\": \"https://www.github.com/kumbuT\",\n     \"profileUrl\": \"/member/teja\",\n     \"email\": \"apoorva.teja@gmail.com\"\n }",
+          "content": " HTTP/1.1 200 OK\n {\"success\":true,\n  \"message\": \"Found 3 members in the database with the skills JavaScript\",\n  \"data\": [\n             {\n                  \"skills\": [\n                  \"JavaScript\",\n                  \"NodeJs\",\n                  \"ExpressJs\",\n                \"MongoDB\"\n              ],\n              \"_id\": \"5a78d098670168148c5ebb52\",\n              \"lastName\": \"Kim\",\n              \"firstName\": \"Amber\",\n              \"linkedInUrl\": \"https://www.linkedin.com/in/amberkim\",\n              \"gitHubUrl\": \"https://www.github.com/amber\",\n              \"profileUrl\": \"/member/kim\",\n              \"email\": \"amber@gmail.com\"\n              \"addTS\" \"2018-02-08 11:37:02.104\",\n              \"modifiedTS\": \"2018-02-08 11:37:02.104\",\n              \"__V\": 0\n             }]\n}",
           "type": "json"
         }
       ]
@@ -342,7 +388,7 @@ define({ "api": [
         },
         {
           "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n {\n  \"error\": \"Not Found\"\n }",
+          "content": "HTTP/1.1 404 Not Found\n {\n      \"success\": false,\n      \"error\": \"Not Found\"\n }",
           "type": "json"
         }
       ]
@@ -430,12 +476,35 @@ define({ "api": [
             "field": "_id",
             "description": "<p>Database ID of the member</p>"
           }
+        ],
+        "Response body": [
+          {
+            "group": "Response body",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Boolean success indicator. True or False</p>"
+          },
+          {
+            "group": "Response body",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Success message with updated user ID</p>"
+          },
+          {
+            "group": "Response body",
+            "type": "JSON",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Member profiles</p>"
+          }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n  {\n     \"skills\": [\n         \"JavaScript\",\n         \"C#\",\n         \"Azure\",\n         \"NodeJs\",\n         \"ExpressJs\",\n         \"MongoDB\",\n         \"REDIS\"\n     ],\n     \"_id\": \"5a78d145670168148c5ebb54\",\n     \"lastName\": \"Teja\",\n     \"firstName\": \"Apoorva\",\n     \"linkedInUrl\": \"https://www.linkedin.com/in/apoorvateja\",\n     \"gitHubUrl\": \"https://www.github.com/kumbuT\",\n     \"profileUrl\": \"/member/teja\",\n     \"email\": \"apoorva.teja@gmail.com\"\n }",
+          "content": "HTTP/1.1 200 OK\n  {\n     \"success\": true,\n     \"message\": \"Found 1 member in database with skills JavaScript\"\n       \"data\"  : {\"skills\": [\n                       \"JavaScript\",\n                       \"C#\",\n                       \"Azure\",\n                       \"NodeJs\",\n                       \"ExpressJs\",\n                       \"MongoDB\",\n                       \"REDIS\"\n                    ],\n                \"_id\": \"5a78d145670168148c5ebb54\",\n                \"lastName\": \"Teja\",\n                \"firstName\": \"Apoorva\",\n                \"linkedInUrl\": \"https://www.linkedin.com/in/apoorvateja\",\n                \"gitHubUrl\": \"https://www.github.com/kumbuT\",\n                \"profileUrl\": \"/member/teja\",\n                \"email\": \"apoorva.teja@gmail.com\"\n                \"addTS\" \"2018-02-08 11:37:02.104\",\n                \"modifiedTS\": \"2018-02-08 11:37:02.104\",\n                \"__V\": 0\n                }\n }",
           "type": "json"
         }
       ]
@@ -459,7 +528,190 @@ define({ "api": [
         },
         {
           "title": "Error-Response:",
-          "content": "HTTP/1.1 404 Not Found\n {\n  \"error\": \"Not Found\"\n }",
+          "content": "HTTP/1.1 404 Not Found\n {\n      \"success\": false,\n      \"error\": \"Not Found\"\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "routes/api.js",
+    "groupTitle": "Members"
+  },
+  {
+    "type": "DELETE",
+    "url": "/api/v0/members/:memberID/delete",
+    "title": "Request to remove member profile",
+    "name": "removeMember",
+    "description": "<p>Remove a member if their ID is valid and they're in DB</p>",
+    "group": "Members",
+    "version": "0.0.1",
+    "success": {
+      "fields": {
+        "Response body": [
+          {
+            "group": "Response body",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Boolean success indicator. True or False</p>"
+          },
+          {
+            "group": "Response body",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Success message with updated user ID</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n  {\n    \"success\": true,\n    \"message\": \"Member profile with id: 5a7d0e48e7e0d91ee810ffa4 was removed.\",",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "BadRequest",
+            "description": "<p>400 No specific response</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n {\n      \"success\": false,\n      \"error\": \"Not Found\"\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "routes/api.js",
+    "groupTitle": "Members"
+  },
+  {
+    "type": "PUT",
+    "url": "/api/v0/members/:memberID/update",
+    "title": "Request to update member profile",
+    "name": "updateMember",
+    "description": "<p>Update a member profile if their ID is valid and they exist in database</p>",
+    "group": "Members",
+    "version": "0.0.1",
+    "parameter": {
+      "fields": {
+        "Request body": [
+          {
+            "group": "Request body",
+            "type": "JSON",
+            "optional": false,
+            "field": "memberProfile",
+            "description": "<p>Object name of the profile</p>"
+          },
+          {
+            "group": "Request body",
+            "type": "Array",
+            "optional": false,
+            "field": "memberProfile.skills",
+            "description": "<p>skills of the user your creating</p>"
+          },
+          {
+            "group": "Request body",
+            "type": "String",
+            "optional": false,
+            "field": "memberProfile.lName",
+            "description": "<p>last name of the member you are creating</p>"
+          },
+          {
+            "group": "Request body",
+            "type": "String",
+            "optional": false,
+            "field": "memberProfile.fName",
+            "description": "<p>First name of the member you are creating</p>"
+          },
+          {
+            "group": "Request body",
+            "type": "String",
+            "optional": false,
+            "field": "memberProfile.linkedInUrl",
+            "description": "<p>LinkedIn profile URL of member you are creating</p>"
+          },
+          {
+            "group": "Request body",
+            "type": "String",
+            "optional": false,
+            "field": "memberProfile.gitHubUrl",
+            "description": "<p>GitHub profile URL of the member you are creating</p>"
+          },
+          {
+            "group": "Request body",
+            "type": "String",
+            "optional": false,
+            "field": "memberProfile.profileUrl",
+            "description": "<p>FCC Redmond Site Profile URL of the member you are creating</p>"
+          },
+          {
+            "group": "Request body",
+            "type": "String",
+            "optional": false,
+            "field": "memberProfile.email",
+            "description": "<p>Email alias of the member you are creating</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Response body": [
+          {
+            "group": "Response body",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Boolean success indicator. True or False</p>"
+          },
+          {
+            "group": "Response body",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Success message with updated user ID</p>"
+          },
+          {
+            "group": "Response body",
+            "type": "JSON",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Updated member profile</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n  {\n    \"success\": true,\n    \"message\": \"Member profile with id: 5a7d0e48e7e0d91ee810ffa4 was updated.\",\n    \"data\": {\n                \"skills\": [\n                            \"JavaScript\",\n                            \"Html5\"\n                            ],\n                \"addTS\": \"2018-02-09T02:58:16.164Z\",\n                \"modifiedTS\": \"2018-02-09T02:58:16.164Z\",\n                \"_id\": \"5a7d0e48e7e0d91ee810ffa4\",\n                \"lastName\": \"Smith\",\n                \"firstName\": \"Sam\",\n                \"profileUrl\": \"/members/Smith\",\n                \"linkedInUrl\": \"https://www.linkedin.com/in/smith\",\n                \"gitHubUrl\": \"https://github.com/smith\",\n                \"email\": \"smith@gmail.com\",\n                \"__v\": 0\n            }\n  }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "BadRequest",
+            "description": "<p>400 No specific response</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n {\n      \"success\": false,\n      \"error\": \"Not Found\"\n }",
           "type": "json"
         }
       ]

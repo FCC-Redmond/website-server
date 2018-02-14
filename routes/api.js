@@ -92,7 +92,7 @@ const database = require('../model/members.js');
  */
 
 var getMembers = async function (req, res, next) {
-    if (req.query.hasOwnProperty("skills")) {
+    if ("skills" in req.query) {
         getMembersBySkills(req, res, next);
     } else {
         try {
@@ -319,7 +319,7 @@ var getMembersBySkills = async function (req, res, next) {
  */
 var addMember = function (req, res, next) {
     try {
-        if (req.body.hasOwnProperty("memberProfile")) {
+        if ("memberProfile" in req.body) {
             let newMember = req.body.memberProfile;
             if (!newMember.hasOwnProperty("email")) {
                 res.status(422).send({
@@ -414,7 +414,7 @@ var addMember = function (req, res, next) {
  */
 var updateMember = async function (req, res, next) {
     try {
-        if (req.body.hasOwnProperty("memberProfile")) {
+        if ("memberProfile" in req.body) {
             let memberProfile = req.body.memberProfile;
             let memberId = req.params.id;
             if (!checkMongoDbId(memberId)) {

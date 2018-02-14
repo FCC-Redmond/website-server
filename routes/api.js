@@ -185,7 +185,7 @@ var getMemberByLastName = async function (req, res, next) {
         } else {
             res.status(200).send({
                 "success": true,
-                "message": "Found a member with the last name " + lName,
+                "message": "Found a member with the last name " + lastName,
                 "data": member
             });
         }

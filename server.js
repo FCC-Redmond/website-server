@@ -39,7 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('port', PORT);
 
 /**
- * Create https server
+ * Create http server
  */
 var server = http.createServer(app);
 
@@ -192,16 +192,3 @@ try {
 } catch (err) {
   console.log('Catastrophic error in connecting to MongoDb: ' + err);
 }
-
-
-// module.exports.startup = function(){
-//   server.listen(PORT);
-// };
-
-// module.exports.shutdown = function(){
-  // try{
-  //   server.close();
-  // }catch(err){
-  //   console.error(`Could not shutdown web server: ${err}`);
-  // }
-//};

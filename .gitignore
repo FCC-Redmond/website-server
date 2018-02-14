@@ -1,6 +1,5 @@
-node_modules
-.vscode
-apidoc.json
-Procfile
-*.log
 apidoc
+node_modules
+Procfile
+LICENSE
+apidoc.json

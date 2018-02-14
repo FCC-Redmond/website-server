@@ -1,15 +1,17 @@
 'use strict';
 
-var express = require('express');
-var router = express.Router();
-var database = require('../model/db.js');
+const express = require('express');
+const router = express.Router();
+const database = require('../model/members.js');
+
 /**
  * @apiDefine OnNotFoundError Resource not found error
  * 
  * @apiErrorExample Error-Response:
  *  HTTP/1.1 404 Not Found
  *   {
- *    "error": "Not Found"
+ *        "success": false,
+ *        "error": "Not Found"
  *   }
  */
 
@@ -19,7 +21,7 @@ var database = require('../model/db.js');
  *  @apiDescription Retrieves all members in database
  *  @apiGroup Members
  *
- *  @apiVersion 0.0.1
+ *  @apiVersion 0.0.2
  *  
  *  @apiSuccess {String}   firstName   Firstname of member
  *  @apiSuccess {String}   lastName    LastName of member 
@@ -30,10 +32,14 @@ var database = require('../model/db.js');
  *  @apiSuccess {String}   profileUrl  Profile path of user on FCC Redmond Site e.g. /member/teja
  *  @apiSuccess {Object}   _id         Database ID of the member
  * 
+ *  @apiSuccess (Response body) {Boolean}   success   Boolean success indicator. True or False
+ *  @apiSuccess (Response body) {String}    message   Success message with updated user ID
+ *  @apiSuccess (Response body) {JSON}      data      Member profiles
  *  @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {"success":true,
- *   "message": [
+ *   "message": "Found 2 members in database", 
+ *      "data": [
  *              {
  *                   "skills": [
  *                   "JavaScript",
@@ -91,9 +97,16 @@ var getMembers = async function (req, res, next) {
     } else {
         try {
             var list = await database.list();
+            let message = "";
+            switch (list.length) {
+                case 0: message = "No members in database"; break;
+                case 1: message = "Found 1 member in database"; break;
+                default: message = "Found " + list.length + " members in database"; break;
+            }
             res.status(200).send({
                 "success": true,
-                "message": list
+                "message": message,
+                "data": list
             });
         } catch (err) {
             onError(res, err);
@@ -109,7 +122,7 @@ var getMembers = async function (req, res, next) {
  *  @apiDescription Retrieves one member in database with the given last name. <i>Currently retrieves only one successful last name match.</i> 
  *  @apiGroup Members
  *
- *  @apiVersion 0.0.1
+ *  @apiVersion 0.0.2
  * 
  *  @apiParam {String} lName Last Name of the member who's profile you want to retrieve
  *  
@@ -122,10 +135,15 @@ var getMembers = async function (req, res, next) {
  *  @apiSuccess {String}   profileUrl  Profile path of user on FCC Redmond Site e.g. /member/teja
  *  @apiSuccess {Object}   _id         Database ID of the member
  * 
+ *  @apiSuccess (Response body) {Boolean}   success   Boolean success indicator. True or False
+ *  @apiSuccess (Response body) {String}    message   Success message with updated user ID
+ *  @apiSuccess (Response body) {JSON}      data      Member profiles 
+ * 
  *  @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *  {"success":true,
- *   "message": [
+ *   "message": "Found 3 members in the database with the skills JavaScript",
+ *   "data": [
  *              {
  *                   "skills": [
  *                   "JavaScript",
@@ -165,7 +183,11 @@ var getMemberByLastName = async function (req, res, next) {
                 "message": 'No members with last name ' + lastName + ' found'
             });
         } else {
-            res.status(200).send(member);
+            res.status(200).send({
+                "success": true,
+                "message": "Found a member with the last name " + lName,
+                "data": member
+            });
         }
 
 
@@ -181,7 +203,7 @@ var getMemberByLastName = async function (req, res, next) {
  *  @apiDescription Retrieves members with all the skills specified in the query string parameter "skills". <i>Note that skills query string parameter is a comma separated value of the skills and is case sensitive</i>
  *  @apiGroup Members
  *
- *  @apiVersion 0.0.1
+ *  @apiVersion 0.0.2
  * 
  *  @apiParam {String} skills The skills you want to find members by
  *  
@@ -194,28 +216,35 @@ var getMemberByLastName = async function (req, res, next) {
  *  @apiSuccess {String}   profileUrl  Profile path of user on FCC Redmond Site e.g. /member/teja
  *  @apiSuccess {Object}   _id         Database ID of the member
  * 
- *  @apiSuccessExample Success-Response:
+ *  @apiSuccess (Response body) {Boolean}   success   Boolean success indicator. True or False
+ *  @apiSuccess (Response body) {String}    message   Success message with updated user ID
+ *  @apiSuccess (Response body) {JSON}      data      Member profiles
+ *  
+ * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *    {
- *       "skills": [
- *           "JavaScript",
- *           "C#",
- *           "Azure",
- *           "NodeJs",
- *           "ExpressJs",
- *           "MongoDB",
- *           "REDIS"
- *       ],
- *       "_id": "5a78d145670168148c5ebb54",
- *       "lastName": "Teja",
- *       "firstName": "Apoorva",
- *       "linkedInUrl": "https://www.linkedin.com/in/apoorvateja",
- *       "gitHubUrl": "https://www.github.com/kumbuT",
- *       "profileUrl": "/member/teja",
- *       "email": "apoorva.teja@gmail.com"
- *       "addTS" "2018-02-08 11:37:02.104",
- *       "modifiedTS": "2018-02-08 11:37:02.104",
- *       "__V": 0
+ *       "success": true,
+ *       "message": "Found 1 member in database with skills JavaScript"
+ *         "data"  : {"skills": [
+ *                         "JavaScript",
+ *                         "C#",
+ *                         "Azure",
+ *                         "NodeJs",
+ *                         "ExpressJs",
+ *                         "MongoDB",
+ *                         "REDIS"
+ *                      ],
+ *                  "_id": "5a78d145670168148c5ebb54",
+ *                  "lastName": "Teja",
+ *                  "firstName": "Apoorva",
+ *                  "linkedInUrl": "https://www.linkedin.com/in/apoorvateja",
+ *                  "gitHubUrl": "https://www.github.com/kumbuT",
+ *                  "profileUrl": "/member/teja",
+ *                  "email": "apoorva.teja@gmail.com"
+ *                  "addTS" "2018-02-08 11:37:02.104",
+ *                  "modifiedTS": "2018-02-08 11:37:02.104",
+ *                  "__V": 0
+ *                  }
  *   }
  *
  *  @apiError NoMemberFound  404 Response sent if no member with given last name exists
@@ -239,7 +268,8 @@ var getMembersBySkills = async function (req, res, next) {
         } else {
             res.status(200).send({
                 "success": true,
-                "message": members
+                "message": "Found " + members.length + " in database",
+                "data": members
             });
         }
     } catch (err) {
@@ -254,7 +284,7 @@ var getMembersBySkills = async function (req, res, next) {
  *  @apiDescription Adds a new member if the member's email doesn't already exist in the database. Rejects if the _id parameter is set and is duplicate
  *  @apiGroup Members
  *
- *  @apiVersion 0.0.1
+ *  @apiVersion 0.0.2
  * 
  *  @apiParam (Request body) {JSON}   memberProfile Object name of the profile
  *  @apiParam (Request body) {Array}  memberProfile.skills skills of the user your creating
@@ -334,12 +364,12 @@ var addMember = function (req, res, next) {
 };
 
 /**
- *  @api {PUT} /api/v0/members/:memberID/update Request to update member profile
+ *  @api {PUT} /api/v0/members/:memberID Request to update member profile
  *  @apiName updateMember
- *  @apiDescription Adds a new member if the member's email doesn't already exist in the database. Rejects if the _id parameter is set and is duplicate
+ *  @apiDescription Update a member profile if their ID is valid and they exist in database
  *  @apiGroup Members
  *
- *  @apiVersion 0.0.1
+ *  @apiVersion 0.0.2
  * 
  *  @apiParam (Request body) {JSON}   memberProfile Object name of the profile
  *  @apiParam (Request body) {Array}  memberProfile.skills skills of the user your creating
@@ -350,8 +380,9 @@ var addMember = function (req, res, next) {
  *  @apiParam (Request body) {String} memberProfile.profileUrl FCC Redmond Site Profile URL of the member you are creating
  *  @apiParam (Request body) {String} memberProfile.email Email alias of the member you are creating
  * 
- *  @apiSuccess (Response body) {String}   success   Boolean success indicator. True or False
- *  @apiSuccess (Response body) {String}   message   Success message with created user ID
+ *  @apiSuccess (Response body) {Boolean}   success   Boolean success indicator. True or False
+ *  @apiSuccess (Response body) {String}    message   Success message with updated user ID
+ *  @apiSuccess (Response body) {JSON}      data      Updated member profile 
 
  * 
  *  @apiSuccessExample Success-Response:
@@ -386,6 +417,10 @@ var updateMember = async function (req, res, next) {
         if (req.body.hasOwnProperty("memberProfile")) {
             let memberProfile = req.body.memberProfile;
             let memberId = req.params.id;
+            if (!checkMongoDbId(memberId)) {
+                onError(res, new Error("The provided ID is not a valid mongoDb ID"), 500);
+                return;
+            }
             /**
              * 
              * @param {Object} error                    Error object. Can be null or undefined
@@ -417,6 +452,70 @@ var updateMember = async function (req, res, next) {
         console.error(err);
     }
 };
+
+/**
+ *  @api {DELETE} /api/v0/members/:memberID Request to remove member profile
+ *  @apiName removeMember
+ *  @apiDescription Remove a member if their ID is valid and they're in DB
+ *  @apiGroup Members
+ *
+ *  @apiVersion 0.0.2
+ * 
+ * 
+ *  @apiSuccess (Response body) {Boolean}   success   Boolean success indicator. True or False
+ *  @apiSuccess (Response body) {String}    message   Success message with updated user ID
+ * 
+ *  @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *    {
+ *      "success": true,
+ *      "message": "Member profile with id: 5a7d0e48e7e0d91ee810ffa4 was removed.",
+ *
+ *  @apiError BadRequest  400 No specific response
+ * 
+ *  @apiUse OnNotFoundError
+ */
+let removeMember = function (req, res, next) {
+    try {
+        let memberId = req.params.id;
+        if (!checkMongoDbId(memberId)) {
+            onError(res, new Error("The provided ID is not a valid mongoDb ID"), 500);
+            return;
+        }
+        let cb = function (err, member) {
+            if (err) {
+                onError(res, err);
+                console.error(err);
+                return;
+            }
+            if (!member) {
+                res.status(404).send({
+                    "status": false,
+                    "message": "No member with the provided ID " + memberId + " found"
+                });
+            } else {
+                res.status(200).send({
+                    "success": true,
+                    "message": "Member with ID:" + memberId + " removed."
+                });
+            }
+        }
+
+        database.removeMember(memberId, cb);
+    } catch (err) {
+        onError(res, err);
+        console.error(err);
+    }
+};
+
+/**
+ * 
+ * @param {*} ObjectId 
+ */
+let checkMongoDbId = function (id) {
+    return /^[0-9a-fA-F]{24}$/g.test(id);
+};
+
 /**
  * @param {Object} res         response object sent from caller
  * @param {Object} error       Error object sent
@@ -439,6 +538,6 @@ let onError = function (res, error, statusCode) {
 router.get('/members', getMembers);
 router.get('/members/:lName', getMemberByLastName);
 router.post('/members/add', addMember);
-router.get('/members/:skills', getMembersBySkills);
-router.put('/members/:id/update', updateMember);
+router.put('/members/:id', updateMember);
+router.delete('/members/:id', removeMember);
 module.exports = router;

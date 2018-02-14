@@ -8,6 +8,7 @@ const config = require('./config.js');
 const http = require('http');
 const debug = require('debug')('website-server:server');
 const path = require('path');
+const mongoose = require('mongoose');
 
 const app = express();
 const PORT = normalizePort(process.env.PORT || 3000);
@@ -126,14 +127,81 @@ function normalizePort(val) {
   return false;
 }
 
-module.exports.startup = function(){
-  server.listen(PORT);
-};
+/**
+ * Initialize MongoDB
+ */
 
-module.exports.shutdown = function(){
-  try{
-    server.close();
-  }catch(err){
-    console.error(`Could not shutdown web server: ${err}`);
-  }
-};
+// mongodb connection
+const DATABASE_URL = process.env.MONGODB_URI || config.database.url;
+
+/**
+ * Initialize Mongoose adapter for MongoDB. If connection fails on first attempt, no further attempts to connect 
+ * is made. This is a fail fast strategy. If connected to DB then web server is started.
+ * If connection fails after initial connection then unlimited reconnect attempts will be made. Web server will be 
+ * shutdown until successful connection is established
+ */
+try {
+  let options = {
+    "autoReconnect": true,
+    "reconnectTries": Number.MAX_VALUE,
+    "reconnectInterval": 500
+  };
+  mongoose.Promise = global.Promise;
+  mongoose.connect(DATABASE_URL, options).then(function () {
+    console.info(`Mongoose connection successfully created`);
+  }).catch(function (error) {
+    console.error(`Error on connection: ${error}`);
+  });
+  var db = mongoose.connection;
+
+  // When successfully connected
+  mongoose.connection.on('connected', function () {
+    /**
+     * Start the webserver when connection is established
+     */
+    server.listen(PORT);
+    console.log('Mongoose default connection open to ' + DATABASE_URL);
+  });
+
+  // If the connection throws an error
+  mongoose.connection.on('error', function (err) {
+    console.log('Mongoose default connection error: ' + err);
+  });
+
+  // When the connection is disconnected
+  mongoose.connection.on('disconnected', function () {
+    /**
+     * Shutdown web server if the DB is unavilable
+     */
+    try {
+      server.close();
+    } catch (err) {
+      console.error(`Could not shutdown web server: ${err}`);
+    }
+    console.log('Mongoose default connection disconnected');
+
+  });
+  // If the Node process ends, close the Mongoose connection 
+  process.on('SIGINT', function () {
+    mongoose.connection.close(function () {
+      console.log('Mongoose default connection disconnected through app termination');
+      process.exit(0);
+    });
+  });
+
+} catch (err) {
+  console.log('Catastrophic error in connecting to MongoDb: ' + err);
+}
+
+
+// module.exports.startup = function(){
+//   server.listen(PORT);
+// };
+
+// module.exports.shutdown = function(){
+  // try{
+  //   server.close();
+  // }catch(err){
+  //   console.error(`Could not shutdown web server: ${err}`);
+  // }
+//};

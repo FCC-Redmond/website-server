@@ -117,7 +117,7 @@ module.exports.addMember = function (memberProfile, cb) {
 module.exports.updateMember = function (memberProfile, memberId, cb) {
     //check whether the callback is a callable function
     cb = typeof (cb) === 'function' ? cb : function () { };
-
+    
     //build your update object with modifiedTS updated
     let keyVal = {};
     for (var item in memberProfile) {
@@ -133,6 +133,8 @@ module.exports.updateMember = function (memberProfile, memberId, cb) {
     if (!('modifiedTS' in keyVal)) {
         keyVal.modifiedTS = Date.now();
     }
+    console.log("Inside member.js update. MemberPrfile:"+ memberProfile);
+    console.log("Inside member.js update.Member ID:" + memberId);
     members.findByIdAndUpdate(memberId, {
         $set: keyVal
     }, {

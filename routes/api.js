@@ -431,6 +431,8 @@ var updateMember = async function (req, res, next) {
                     onError(res, error, 500);
                     return;
                 } else if (!updatedMemberProfile) {
+                    console.log("error:" + error);
+                    console.log("memberProfile:"+ memberProfile);
                     onError(res, new Error("Invalid ID sent. Nothing was updated"), 400);
                 } else {
                     res.status(200).send({

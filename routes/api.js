@@ -178,7 +178,7 @@ var getMemberByLastName = async function (req, res, next) {
     try {
         var member = await database.findMember(lastName);
         if (!member || member.length == 0) {
-            res.status(404).send({
+            res.status(200).send({
                 "success": false,
                 "message": 'No members with last name ' + lastName + ' found'
             });
@@ -489,7 +489,7 @@ let removeMember = function (req, res, next) {
                 return;
             }
             if (!member) {
-                res.status(404).send({
+                res.status(200).send({
                     "status": false,
                     "message": "No member with the provided ID " + memberId + " found"
                 });

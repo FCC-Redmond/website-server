@@ -121,7 +121,7 @@ module.exports.updateMember = function (memberProfile, memberId, cb) {
     //build your update object with modifiedTS updated
     let keyVal = {};
     for (var item in memberProfile) {
-        if (memberProfile.hasOwnProperty(item)) {
+        if (item in memberProfile) {
             if (item === "modifiedTS") {
                 keyVal[item] = Date.now();
             } else {

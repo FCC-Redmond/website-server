@@ -100,7 +100,7 @@ module.exports.findMembersBySkills = function (skills) {
  * @param {*}      cb            callback
  */
 module.exports.addMember = function (memberProfile, cb) {
-    cb = typeof (cb) === 'function' ? cb : function () { };
+    cb = typeof (cb) === 'function' ? cb : function () {};
     let newMember = new members(memberProfile);
     newMember.save(function (err, doc) {
         console.debug(doc);
@@ -116,7 +116,7 @@ module.exports.addMember = function (memberProfile, cb) {
  */
 module.exports.updateMember = function (memberProfile, memberId, cb) {
     //check whether the callback is a callable function
-    cb = typeof (cb) === 'function' ? cb : function () { };
+    cb = typeof (cb) === 'function' ? cb : function () {};
 
     //build your update object with modifiedTS updated
     let keyVal = {};
@@ -133,15 +133,15 @@ module.exports.updateMember = function (memberProfile, memberId, cb) {
     if (!('modifiedTS' in keyVal)) {
         keyVal.modifiedTS = Date.now();
     }
-    console.log("Inside member.js update. MemberProfile:"+ memberProfile);
+    console.log("Inside member.js update. MemberProfile:" + JSON.stringify(memberProfile));
     console.log("Inside member.js update.Member ID:" + memberId);
     members.findByIdAndUpdate(memberId, {
         $set: keyVal
     }, {
-            new: true
-        }, function (error, updatedMember) {
-            cb(error, updatedMember);
-        });
+        new: true
+    }, function (error, updatedMember) {
+        cb(error, updatedMember);
+    });
 };
 
 /**
@@ -150,7 +150,7 @@ module.exports.updateMember = function (memberProfile, memberId, cb) {
  * @param {*} cb Callback function 
  */
 module.exports.removeMember = function (id, cb) {
-    cb = typeof (cb) === 'function' ? cb : function () { };
+    cb = typeof (cb) === 'function' ? cb : function () {};
     members.findByIdAndRemove(id, function (err, removedMember) {
         cb(err, removedMember);
     });

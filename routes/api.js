@@ -99,9 +99,15 @@ var getMembers = async function (req, res, next) {
             var list = await database.list();
             let message = "";
             switch (list.length) {
-                case 0: message = "No members in database"; break;
-                case 1: message = "Found 1 member in database"; break;
-                default: message = "Found " + list.length + " members in database"; break;
+                case 0:
+                    message = "No members in database";
+                    break;
+                case 1:
+                    message = "Found 1 member in database";
+                    break;
+                default:
+                    message = "Found " + list.length + " members in database";
+                    break;
             }
             res.status(200).send({
                 "success": true,
@@ -432,7 +438,7 @@ var updateMember = async function (req, res, next) {
                     return;
                 } else if (!updatedMemberProfile) {
                     console.log("Inside api.js update. error:" + error);
-                    console.log("Inside api.js update. memberProfile:"+ updatedMemberProfile);
+                    console.log("Inside api.js update. memberProfile:" + JSON.stringify(updatedMemberProfile));
                     onError(res, new Error("Invalid ID sent. Nothing was updated"), 400);
                 } else {
                     res.status(200).send({

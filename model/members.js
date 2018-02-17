@@ -122,19 +122,27 @@ module.exports.updateMember = function (memberProfile, memberId, cb) {
     let keyVal = {};
     for (var item in memberProfile) {
         if (item in memberProfile) {
-            if (item === "modifiedTS") {
-                keyVal[item] = Date.now();
-            } else {
-                keyVal[item] = memberProfile[item];
+            switch (item) {
+                case "modifiedTS":
+                    keyVal[item] = Date.now();
+                    break;
+                case "addTS":
+                    break;
+                case "_id":
+                    break;
+                case "__v":
+                    break;
+                default:
+                    keyVal[item] = memberProfile[item];
+                    break;
             }
+
         }
     }
     //In case caller didn't send modified TS
     if (!('modifiedTS' in keyVal)) {
         keyVal.modifiedTS = Date.now();
     }
-    console.log("Inside member.js update. MemberProfile:" + JSON.stringify(memberProfile));
-    console.log("Inside member.js update.Member ID:" + memberId);
     members.findByIdAndUpdate(memberId, {
         $set: keyVal
     }, {

@@ -435,13 +435,10 @@ var updateMember = async function (req, res, next) {
              * @param {*}      updatedMemberProfile     The updated Member Profile for caller validation
              */
             let cb = function (error, updatedMemberProfile) {
-                console.log('api.js updateMember updatedMemberProfile', updatedMemberProfile);
                 if (error) {
                     onError(res, error, 500);
                     return;
                 } else if (!updatedMemberProfile) {
-                    console.log("Inside api.js update. error:" + error);
-                    console.log("Inside api.js update. memberProfile:" + JSON.stringify(updatedMemberProfile));
                     onError(res, new Error("Invalid ID sent. Nothing was updated"), 400);
                 } else {
                     res.status(200).send({

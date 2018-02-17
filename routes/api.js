@@ -423,17 +423,18 @@ var updateMember = async function (req, res, next) {
         if ("memberProfile" in req.body) {
             let memberProfile = req.body.memberProfile;
             let memberId = req.params.id;
-            console.log('api.js updateMember memberId', memberId);
             if (!checkMongoDbId(memberId)) {
                 onError(res, new Error("The provided ID is not a valid mongoDb ID"), 500);
                 return;
             }
+
             /**
              * 
              * @param {Object} error                    Error object. Can be null or undefined
              * @param {*}      updatedMemberProfile     The updated Member Profile for caller validation
              */
             let cb = function (error, updatedMemberProfile) {
+                console.log('api.js updateMember updatedMemberProfile', updatedMemberProfile);
                 if (error) {
                     onError(res, error, 500);
                     return;

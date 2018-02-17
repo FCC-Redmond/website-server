@@ -422,6 +422,7 @@ var updateMember = async function (req, res, next) {
     try {
         if ("memberProfile" in req.body) {
             let memberProfile = req.body.memberProfile;
+            console.log('api.js updateMember try if memberProfile', memberProfile);
             let memberId = req.params.id;
             if (!checkMongoDbId(memberId)) {
                 onError(res, new Error("The provided ID is not a valid mongoDb ID"), 500);

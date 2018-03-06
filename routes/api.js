@@ -422,11 +422,13 @@ var updateMember = async function (req, res, next) {
     try {
         if ("memberProfile" in req.body) {
             let memberProfile = req.body.memberProfile;
+            console.log('api.js updateMember try if memberProfile', memberProfile);
             let memberId = req.params.id;
             if (!checkMongoDbId(memberId)) {
                 onError(res, new Error("The provided ID is not a valid mongoDb ID"), 500);
                 return;
             }
+
             /**
              * 
              * @param {Object} error                    Error object. Can be null or undefined
@@ -437,8 +439,6 @@ var updateMember = async function (req, res, next) {
                     onError(res, error, 500);
                     return;
                 } else if (!updatedMemberProfile) {
-                    console.log("Inside api.js update. error:" + error);
-                    console.log("Inside api.js update. memberProfile:" + JSON.stringify(updatedMemberProfile));
                     onError(res, new Error("Invalid ID sent. Nothing was updated"), 400);
                 } else {
                     res.status(200).send({

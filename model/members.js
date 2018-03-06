@@ -71,7 +71,7 @@ module.exports.list = function () {
 };
 
 module.exports.findMember = function (lName) {
-    return members.findOne({
+    return members.find({
         "lastName": {
             $regex: new RegExp(lName, "i")
         }
@@ -143,6 +143,7 @@ module.exports.updateMember = function (memberProfile, memberId, cb) {
     if (!('modifiedTS' in keyVal)) {
         keyVal.modifiedTS = Date.now();
     }
+
     members.findByIdAndUpdate(memberId, {
         $set: keyVal
     }, {

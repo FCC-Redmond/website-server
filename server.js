@@ -13,13 +13,6 @@ const mongoose = require('mongoose');
 const app = express();
 const PORT = normalizePort(process.env.PORT || 3000);
 
-let fccEvents = require('./core/fbClient.js');
-var results = {};
-fccEvents.init().then(token => {
-  results.token = token;
-  return fccEvents.getEventsFromGroup('495651020595739', 'EAACEdEose0cBANFZBIu7ByirgzQP0C8sHZCLBdl5SeM5xTSqbe5Fe2fYMjfZB7FFQo2qmYPu4cdj2urhZB8dcqdszRQZAANFNjrU3ft2A7MDbR2vSqlmToFlyWxLwjAlit1LDRym1Lbfrj7XwB25QlK26WgdNACpGNbvvwY8ny8AKoikqMaR0KeOxqJwUN4bLTt2Bc66OuQZDZD');
-}).then(events => { console.log(events) }).catch(err => console.log(err));
-
 //setup the appRoot global 
 
 global.appRoot = path.resolve(__dirname);

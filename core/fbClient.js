@@ -3,8 +3,6 @@
 const { Facebook, FacebookApiException } = require('fb');
 let secrets = require('../secrets/secrets.js');
 
-
-
 let fbClient = {};
 let fb;
 
@@ -25,9 +23,9 @@ fbClient.init = () => {
     });
 };
 
-fbClient.getEventsFromGroup = (groupID, accessToken) => {
+fbClient.getEventsFromPage = (pageID, accessToken) => {
     return new Promise((resolve, reject) => {
-        fb.api("/" + groupID + "/events?access_token="+ accessToken, res => {
+        fb.api("/" + pageID + "/events?access_token="+ accessToken , res => {
             if (!res || res.error) {
                 !res ? reject('Error occurred') : reject(res.error);
             } else {

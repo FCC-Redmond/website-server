@@ -3,7 +3,8 @@
 const express = require('express');
 const router = express.Router();
 const database = require('../model/members.js');
-
+const fccEvents = require('../core/fbClient.js');
+const config = require('../config.js');
 /**
  * @apiDefine OnNotFoundError Resource not found error
  * 
@@ -518,6 +519,24 @@ let removeMember = function (req, res, next) {
 
 /**
  * 
+ */
+let getFacebookEvents = function (req, res, next) {
+    try {
+        var results = {};
+        fccEvents.init().then(token => {
+            results.token = token;
+            return fccEvents.getEventsFromPage(config.facebook.pageId, results.token);
+        }).then(events => {
+            console.log(events);
+            res.status(200).send(events)
+        }).catch(err => console.log(err));
+    } catch (err) {
+        onError(res, err, 500);
+    }
+}
+
+/**
+ * 
  * @param {*} ObjectId 
  */
 let checkMongoDbId = function (id) {
@@ -542,10 +561,15 @@ let onError = function (res, error, statusCode) {
     }
 
 };
+
+
+
+
 //setup your routes
 router.get('/members', getMembers);
 router.get('/members/:lName', getMemberByLastName);
 router.post('/members/add', addMember);
 router.put('/members/:id', updateMember);
 router.delete('/members/:id', removeMember);
+router.get('/facebook/events', getFacebookEvents);
 module.exports = router;

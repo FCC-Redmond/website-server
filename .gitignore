@@ -3,3 +3,5 @@ node_modules
 Procfile
 LICENSE
 apidoc.json
+secrets
+secrets.js

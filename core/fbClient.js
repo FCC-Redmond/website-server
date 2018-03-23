@@ -1,7 +1,7 @@
 'use strict';
 
 const { Facebook, FacebookApiException } = require('fb');
-let secrets = require('../secrets/secrets.js');
+
 
 let fbClient = {};
 let fb;
@@ -10,8 +10,8 @@ fbClient.init = () => {
     return new Promise((resolve, reject) => {
         fb = new Facebook(secrets.facebook);
         fb.api('oauth/access_token', {
-            client_id: secrets.facebook.appID,
-            client_secret: secrets.facebook.appSecret,
+            client_id: process.env.FBAPPID,
+            client_secret: process.env.FBAPPSECRET,
             grant_type: 'client_credentials'
         }, res => {
             if (!res || res.error) {

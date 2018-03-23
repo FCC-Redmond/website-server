@@ -192,7 +192,7 @@ var getMemberByLastName = async function (req, res, next) {
         } else {
             res.status(200).send({
                 "success": true,
-                "message": "Found "+ member.length  +" member(s) with the last name " + lastName,
+                "message": "Found " + member.length + " member(s) with the last name " + lastName,
                 "data": member
             });
         }
@@ -522,10 +522,11 @@ let removeMember = function (req, res, next) {
  */
 let getFacebookEvents = function (req, res, next) {
     try {
+        let pageId = req.params.pageId;
         var results = {};
         fccEvents.init().then(token => {
             results.token = token;
-            return fccEvents.getEventsFromPage(config.facebook.pageId, results.token);
+            return fccEvents.getEventsFromPage(pageId, results.token);
         }).then(events => {
             console.log(events);
             res.status(200).send(events)
@@ -571,5 +572,5 @@ router.get('/members/:lName', getMemberByLastName);
 router.post('/members/add', addMember);
 router.put('/members/:id', updateMember);
 router.delete('/members/:id', removeMember);
-router.get('/facebook/events', getFacebookEvents);
+router.get('/facebook/events/:pageId', getFacebookEvents);
 module.exports = router;

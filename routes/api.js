@@ -3,7 +3,8 @@
 const express = require('express');
 const router = express.Router();
 const database = require('../model/members.js');
-
+const fccEvents = require('../core/fbClient.js');
+const config = require('../config.js');
 /**
  * @apiDefine OnNotFoundError Resource not found error
  * 
@@ -191,7 +192,7 @@ var getMemberByLastName = async function (req, res, next) {
         } else {
             res.status(200).send({
                 "success": true,
-                "message": "Found "+ member.length  +" member(s) with the last name " + lastName,
+                "message": "Found " + member.length + " member(s) with the last name " + lastName,
                 "data": member
             });
         }
@@ -518,6 +519,28 @@ let removeMember = function (req, res, next) {
 
 /**
  * 
+ */
+let getFacebookEvents = function (req, res, next) {
+    try {
+        let pageId = req.params.pageId;
+        var results = {};
+        fccEvents.init().then(token => {
+            results.token = token;
+            return fccEvents.getEventsFromPage(pageId, results.token);
+        }).then(events => {
+            console.log(events);
+            res.status(200).send(events)
+        }).catch(err => {
+            console.log(err);
+            onError(res, err, 500);
+        });
+    } catch (err) {
+        onError(res, err, 500);
+    }
+}
+
+/**
+ * 
  * @param {*} ObjectId 
  */
 let checkMongoDbId = function (id) {
@@ -542,10 +565,15 @@ let onError = function (res, error, statusCode) {
     }
 
 };
+
+
+
+
 //setup your routes
 router.get('/members', getMembers);
 router.get('/members/:lName', getMemberByLastName);
 router.post('/members/add', addMember);
 router.put('/members/:id', updateMember);
 router.delete('/members/:id', removeMember);
+router.get('/facebook/events/:pageId', getFacebookEvents);
 module.exports = router;

@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const database = require('../model/members.js');
+const database = require('../model/member.js');
 const fccEvents = require('../core/fbClient.js');
 const config = require('../config.js');
 /**
@@ -604,17 +604,11 @@ let onError = function (res, error, statusCode) {
 };
 
 
-
-
 //setup your routes
 router.get('/members', getMembers);
 router.get('/members/:lName', getMemberByLastName);
 router.post('/members/add', addMember);
 router.put('/members/:id', updateMember);
 router.delete('/members/:id', removeMember);
-<<<<<<< HEAD
-router.get('/facebook/events', getFacebookEvents);
-=======
 router.get('/facebook/events/:pageId', getFacebookEvents);
->>>>>>> 92f4442c843cfa6c2f42ba8db935fa797b35e9bb
 module.exports = router;

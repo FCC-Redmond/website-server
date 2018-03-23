@@ -1,5 +1,62 @@
 [
   {
+    "type": "GET",
+    "url": "/api/v0/facebook/events/:pageId",
+    "title": "Request events of facebook page",
+    "name": "getFacebookEvents",
+    "description": "<p>Get the events from a public Facebook page</p>",
+    "group": "Facebook",
+    "version": "0.0.2",
+    "success": {
+      "fields": {
+        "Response body": [
+          {
+            "group": "Response body",
+            "type": "Boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>Boolean success indicator. True or False</p>"
+          },
+          {
+            "group": "Response body",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Success message with all the provided page events</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n  {\n    \"success\": true,\n    \"message\": \"Member profile with id: 5a7d0e48e7e0d91ee810ffa4 was removed.\",",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "BadRequest",
+            "description": "<p>400 No specific response</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 404 Not Found\n {\n      \"success\": false,\n      \"error\": \"Not Found\"\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "routes/api.js",
+    "groupTitle": "Facebook"
+  },
+  {
     "type": "get",
     "url": "/api/v0/members/",
     "title": "Request all members in database",

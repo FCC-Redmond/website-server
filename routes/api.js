@@ -192,7 +192,7 @@ var getMemberByLastName = async function (req, res, next) {
         } else {
             res.status(200).send({
                 "success": true,
-                "message": "Found "+ member.length  +" member(s) with the last name " + lastName,
+                "message": "Found " + member.length + " member(s) with the last name " + lastName,
                 "data": member
             });
         }
@@ -518,6 +518,47 @@ let removeMember = function (req, res, next) {
 };
 
 /**
+ *  @api {GET} /api/v0/facebook/events/:pageId Request events of facebook page
+ *  @apiName getFacebookEvents
+ *  @apiDescription Get the events from a public Facebook page
+ *  @apiGroup Facebook
+ *
+ *  @apiVersion 0.0.2
+ * 
+ * 
+ *  @apiSuccess (Response body) {Boolean}   success   Boolean success indicator. True or False
+ *  @apiSuccess (Response body) {String}    message   Success message with all the provided page events
+ * 
+ *  @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *    {
+ *      "success": true,
+ *      "message": "Member profile with id: 5a7d0e48e7e0d91ee810ffa4 was removed.",
+ *
+ *  @apiError BadRequest  400 No specific response
+ * 
+ *  @apiUse OnNotFoundError
+ */
+let getFacebookEvents = function (req, res, next) {
+    try {
+        let pageId = req.params.pageId;
+        var results = {};
+        fccEvents.init().then(token => {
+            results.token = token;
+            return fccEvents.getEventsFromPage(pageId, results.token);
+        }).then(events => {
+            console.log(events);
+            res.status(200).send(events)
+        }).catch(err => {
+            console.log(err);
+            onError(res, err, 500);
+        });
+    } catch (err) {
+        onError(res, err, 500);
+    }
+}
+
+/**
  * 
  */
 let getFacebookEvents = function (req, res, next) {
@@ -571,5 +612,9 @@ router.get('/members/:lName', getMemberByLastName);
 router.post('/members/add', addMember);
 router.put('/members/:id', updateMember);
 router.delete('/members/:id', removeMember);
+<<<<<<< HEAD
 router.get('/facebook/events', getFacebookEvents);
+=======
+router.get('/facebook/events/:pageId', getFacebookEvents);
+>>>>>>> 92f4442c843cfa6c2f42ba8db935fa797b35e9bb
 module.exports = router;

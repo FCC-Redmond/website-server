@@ -3,4 +3,10 @@ node_modules
 Procfile
 LICENSE
 apidoc.json
+<<<<<<< HEAD
 secrets
+=======
+secrets
+secrets.js
+launch.json
+>>>>>>> 92f4442c843cfa6c2f42ba8db935fa797b35e9bb

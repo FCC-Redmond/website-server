@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const database = require('../model/members.js');
+const database = require('../lib/member.js');
 const fccEvents = require('../core/fbClient.js');
 const config = require('../config.js');
 /**
@@ -584,8 +584,6 @@ let onError = function (res, error, statusCode) {
     }
 
 };
-
-
 
 
 //setup your routes

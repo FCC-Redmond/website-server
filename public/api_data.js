@@ -2,7 +2,7 @@ define({ "api": [
   {
     "type": "GET",
     "url": "/api/v0/facebook/events/:pageId",
-    "title": "Request to remove member profile",
+    "title": "Request events of facebook page",
     "name": "getFacebookEvents",
     "description": "<p>Get the events from a public Facebook page</p>",
     "group": "Facebook",

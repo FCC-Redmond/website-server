@@ -518,7 +518,7 @@ let removeMember = function (req, res, next) {
 };
 
 /**
- *  @api {GET} /api/v0/facebook/events/:pageId Request to remove member profile
+ *  @api {GET} /api/v0/facebook/events/:pageId Request events of facebook page
  *  @apiName getFacebookEvents
  *  @apiDescription Get the events from a public Facebook page
  *  @apiGroup Facebook

@@ -530,7 +530,10 @@ let getFacebookEvents = function (req, res, next) {
         }).then(events => {
             console.log(events);
             res.status(200).send(events)
-        }).catch(err => console.log(err));
+        }).catch(err => {
+            console.log(err);
+            onError(res, err, 500);
+        });
     } catch (err) {
         onError(res, err, 500);
     }

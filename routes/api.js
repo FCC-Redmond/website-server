@@ -518,7 +518,26 @@ let removeMember = function (req, res, next) {
 };
 
 /**
+ *  @api {GET} /api/v0/facebook/events/:pageId Request to remove member profile
+ *  @apiName getFacebookEvents
+ *  @apiDescription Get the events from a public Facebook page
+ *  @apiGroup Facebook
+ *
+ *  @apiVersion 0.0.2
  * 
+ * 
+ *  @apiSuccess (Response body) {Boolean}   success   Boolean success indicator. True or False
+ *  @apiSuccess (Response body) {String}    message   Success message with all the provided page events
+ * 
+ *  @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *    {
+ *      "success": true,
+ *      "message": "Member profile with id: 5a7d0e48e7e0d91ee810ffa4 was removed.",
+ *
+ *  @apiError BadRequest  400 No specific response
+ * 
+ *  @apiUse OnNotFoundError
  */
 let getFacebookEvents = function (req, res, next) {
     try {

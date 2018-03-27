@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const database = require('../model/member.js');
-const fccEvents = require('../core/fbClient.js');
+const fccEvents = require('../lib/fbClient.js');
 const config = require('../config.js');
 /**
  * @apiDefine OnNotFoundError Resource not found error

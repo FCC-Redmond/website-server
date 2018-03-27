@@ -2,8 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
-const database = require('../model/member.js');
-const fccEvents = require('../lib/fbClient.js');
+const database = require('../lib/member.js');
+const fccEvents = require('../core/fbClient.js');
 const config = require('../config.js');
 /**
  * @apiDefine OnNotFoundError Resource not found error
@@ -553,24 +553,6 @@ let getFacebookEvents = function (req, res, next) {
             console.log(err);
             onError(res, err, 500);
         });
-    } catch (err) {
-        onError(res, err, 500);
-    }
-}
-
-/**
- * 
- */
-let getFacebookEvents = function (req, res, next) {
-    try {
-        var results = {};
-        fccEvents.init().then(token => {
-            results.token = token;
-            return fccEvents.getEventsFromPage(config.facebook.pageId, results.token);
-        }).then(events => {
-            console.log(events);
-            res.status(200).send(events)
-        }).catch(err => console.log(err));
     } catch (err) {
         onError(res, err, 500);
     }

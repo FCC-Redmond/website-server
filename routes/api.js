@@ -5,6 +5,9 @@ const router = express.Router();
 const database = require('../lib/member.js');
 const fccEvents = require('../lib/fbClient.js');
 const config = require('../config.js');
+const verifyToken = require('../auth/verifyToken.js');
+
+
 /**
  * @apiDefine OnNotFoundError Resource not found error
  * 
@@ -425,6 +428,9 @@ var updateMember = async function (req, res, next) {
             let memberProfile = req.body.memberProfile;
             console.log('api.js updateMember try if memberProfile', memberProfile);
             let memberId = req.params.id;
+            if(memberId !== req.userId){
+                res.status(401).send({"success":false, "message": "You can only edit your own member profile."});
+            }
             if (!checkMongoDbId(memberId)) {
                 onError(res, new Error("The provided ID is not a valid mongoDb ID"), 500);
                 return;
@@ -487,6 +493,9 @@ var updateMember = async function (req, res, next) {
 let removeMember = function (req, res, next) {
     try {
         let memberId = req.params.id;
+        if (memberId !== req.userId) {
+            res.status(401).send({ "success": false, "message": "You can only edit your own member profile." });
+        }
         if (!checkMongoDbId(memberId)) {
             onError(res, new Error("The provided ID is not a valid mongoDb ID"), 500);
             return;
@@ -558,14 +567,6 @@ let getFacebookEvents = function (req, res, next) {
     }
 }
 
-/**Github Auth */
-let login = function (req, res, next) {
-    try {
-        //implement this
-    } catch (err) {
-        //implement this
-    }
-}
 
 /**
  * 
@@ -598,9 +599,8 @@ let onError = function (res, error, statusCode) {
 //setup your routes
 router.get('/members', getMembers);
 router.get('/members/:lName', getMemberByLastName);
-router.post('/members/add', addMember);
-router.put('/members/:id', updateMember);
-router.delete('/members/:id', removeMember);
+router.post('/members/add', verifyToken, addMember);
+router.put('/members/:id', verifyToken, updateMember);
+router.delete('/members/:id', verifyToken, removeMember);
 router.get('/facebook/events/:pageId', getFacebookEvents);
-router.get('/login', login);
 module.exports = router;

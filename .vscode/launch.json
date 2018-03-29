@@ -13,7 +13,8 @@
                 "FBAPPID": "1326170657515226",
                 "FBAPPSECRET": "1126a42a66e4fd5e1975fdfbc20e5846",
                 "gitHubClientId": "d26b8d771a57828ff0a0",
-                "gitHubClientSecret": "e677994c6becdc9a4936bd0a433cf2a7d4e6a15b"
+                "gitHubClientSecret": "e677994c6becdc9a4936bd0a433cf2a7d4e6a15b",
+                "CookieSecret": "2896E0DB-F3CE-451E-962B-3388FB801074" //generate some random guid for your testing 
             }
         }
     ]

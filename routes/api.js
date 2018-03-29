@@ -561,9 +561,9 @@ let getFacebookEvents = function (req, res, next) {
 /**Github Auth */
 let login = function (req, res, next) {
     try {
-        let 
+        //implement this
     } catch (err) {
-
+        //implement this
     }
 }
 

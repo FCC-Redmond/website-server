@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const database = require('../lib/member.js');
-const fccEvents = require('../core/fbClient.js');
+const fccEvents = require('../lib/fbClient.js');
 const config = require('../config.js');
 /**
  * @apiDefine OnNotFoundError Resource not found error
@@ -558,6 +558,15 @@ let getFacebookEvents = function (req, res, next) {
     }
 }
 
+/**Github Auth */
+let login = function (req, res, next) {
+    try {
+        let 
+    } catch (err) {
+
+    }
+}
+
 /**
  * 
  * @param {*} ObjectId 
@@ -593,4 +602,5 @@ router.post('/members/add', addMember);
 router.put('/members/:id', updateMember);
 router.delete('/members/:id', removeMember);
 router.get('/facebook/events/:pageId', getFacebookEvents);
+router.get('/login', login);
 module.exports = router;

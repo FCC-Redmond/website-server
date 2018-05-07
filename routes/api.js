@@ -3,8 +3,9 @@
 const express = require('express');
 const router = express.Router();
 const database = require('../lib/member.js');
-const fccEvents = require('../core/fbClient.js');
 const config = require('../config.js');
+
+const bearerMiddlewear = require('../lib/bearer-middleware.js');
 /**
  * @apiDefine OnNotFoundError Resource not found error
  * 
@@ -98,6 +99,17 @@ var getMembers = async function (req, res, next) {
     } else {
         try {
             var list = await database.list();
+            let newList = list.map(member => {
+                return {
+                    _id: member._id,
+                    skills: member.skills,
+                    lastName: member.lastName,
+                    firstName: member.firstName,
+                    linkedInUrl: member.linkedInUrl,
+                    gitHubUrl: member.gitHubUrl,
+                    profileUrl: member.profileUrl
+                }
+            });
             let message = "";
             switch (list.length) {
                 case 0:
@@ -113,7 +125,7 @@ var getMembers = async function (req, res, next) {
             res.status(200).send({
                 "success": true,
                 "message": message,
-                "data": list
+                "data": newList
             });
         } catch (err) {
             onError(res, err);
@@ -184,6 +196,17 @@ var getMemberByLastName = async function (req, res, next) {
     var lastName = req.params.lName;
     try {
         var member = await database.findMember(lastName);
+        let newMember = member.map(member => {
+            return {
+                _id: member._id,
+                skills: member.skills,
+                lastName: member.lastName,
+                firstName: member.firstName,
+                linkedInUrl: member.linkedInUrl,
+                gitHubUrl: member.gitHubUrl,
+                profileUrl: member.profileUrl
+            }
+        });
         if (!member || member.length == 0) {
             res.status(200).send({
                 "success": false,
@@ -193,7 +216,7 @@ var getMemberByLastName = async function (req, res, next) {
             res.status(200).send({
                 "success": true,
                 "message": "Found " + member.length + " member(s) with the last name " + lastName,
-                "data": member
+                "data": newMember
             });
         }
 
@@ -267,6 +290,17 @@ var getMembersBySkills = async function (req, res, next) {
     var skills = req.query.skills;
     try {
         var members = await database.findMembersBySkills(skills);
+        let newMembers = members.map(member => {
+            return {
+                _id: member._id,
+                skills: member.skills,
+                lastName: member.LastName,
+                firstName: member.firstName,
+                linkedInUrl: member.linkedInUrl,
+                gitHubUrl: member.gitHubUrl,
+                profileUrl: member.profileUrl
+            }
+        });
         if (!members || members.length == 0) {
             res.status(200).send({
                 "success": false,
@@ -276,7 +310,7 @@ var getMembersBySkills = async function (req, res, next) {
             res.status(200).send({
                 "success": true,
                 "message": "Found " + members.length + " in database",
-                "data": members
+                "data": newMembers
             });
         }
     } catch (err) {
@@ -328,6 +362,7 @@ var addMember = function (req, res, next) {
     try {
         if ("memberProfile" in req.body) {
             let newMember = req.body.memberProfile;
+            console.log('add member newMember', newMember);
             if (!newMember.hasOwnProperty("email")) {
                 res.status(422).send({
                     "success": false,
@@ -356,6 +391,7 @@ var addMember = function (req, res, next) {
                 //setup the addTS and modifiedTS
                 newMember.addTS = Date.now();
                 newMember.modifiedTS = "";
+                console.log('before database Add Member', newMember);
                 database.addMember(newMember, cb);
             }
         } else {
@@ -421,6 +457,9 @@ var addMember = function (req, res, next) {
  */
 var updateMember = async function (req, res, next) {
     try {
+        if (req.body.memberProfile.password) {
+            throw new Error('Cannot change password');
+        }
         if ("memberProfile" in req.body) {
             let memberProfile = req.body.memberProfile;
             console.log('api.js updateMember try if memberProfile', memberProfile);
@@ -436,6 +475,17 @@ var updateMember = async function (req, res, next) {
              * @param {*}      updatedMemberProfile     The updated Member Profile for caller validation
              */
             let cb = function (error, updatedMemberProfile) {
+                console.log('updatedMemberProfile', updatedMemberProfile);
+                let newMemberProfile = {
+                    skills: updatedMemberProfile.skills,
+                    _id: updatedMemberProfile._id,
+                    lastName: updatedMemberProfile.lastName,
+                    firstName: updatedMemberProfile.firstName,
+                    profileUrl: updatedMemberProfile.profileUrl,
+                    linkedInUrl: updatedMemberProfile.linkedInUrl,
+                    gitHubUrl: updatedMemberProfile.gitHubUrl,
+                    email: updatedMemberProfile.email
+                }
                 if (error) {
                     onError(res, error, 500);
                     return;
@@ -445,7 +495,7 @@ var updateMember = async function (req, res, next) {
                     res.status(200).send({
                         "success": true,
                         "message": "Member profile with id: " + memberId + " was updated.",
-                        "data": updatedMemberProfile
+                        "data": newMemberProfile
                     });
                 }
             }
@@ -517,46 +567,46 @@ let removeMember = function (req, res, next) {
     }
 };
 
-/**
- *  @api {GET} /api/v0/facebook/events/:pageId Request events of facebook page
- *  @apiName getFacebookEvents
- *  @apiDescription Get the events from a public Facebook page
- *  @apiGroup Facebook
- *
- *  @apiVersion 0.0.2
- * 
- * 
- *  @apiSuccess (Response body) {Boolean}   success   Boolean success indicator. True or False
- *  @apiSuccess (Response body) {String}    message   Success message with all the provided page events
- * 
- *  @apiSuccessExample Success-Response:
- *  HTTP/1.1 200 OK
- *    {
- *      "success": true,
- *      "message": "Member profile with id: 5a7d0e48e7e0d91ee810ffa4 was removed.",
- *
- *  @apiError BadRequest  400 No specific response
- * 
- *  @apiUse OnNotFoundError
- */
-let getFacebookEvents = function (req, res, next) {
-    try {
-        let pageId = req.params.pageId;
-        var results = {};
-        fccEvents.init().then(token => {
-            results.token = token;
-            return fccEvents.getEventsFromPage(pageId, results.token);
-        }).then(events => {
-            console.log(events);
-            res.status(200).send(events)
-        }).catch(err => {
-            console.log(err);
-            onError(res, err, 500);
-        });
-    } catch (err) {
-        onError(res, err, 500);
-    }
-}
+// /**
+//  *  @api {GET} /api/v0/facebook/events/:pageId Request events of facebook page
+//  *  @apiName getFacebookEvents
+//  *  @apiDescription Get the events from a public Facebook page
+//  *  @apiGroup Facebook
+//  *
+//  *  @apiVersion 0.0.2
+//  * 
+//  * 
+//  *  @apiSuccess (Response body) {Boolean}   success   Boolean success indicator. True or False
+//  *  @apiSuccess (Response body) {String}    message   Success message with all the provided page events
+//  * 
+//  *  @apiSuccessExample Success-Response:
+//  *  HTTP/1.1 200 OK
+//  *    {
+//  *      "success": true,
+//  *      "message": "Member profile with id: 5a7d0e48e7e0d91ee810ffa4 was removed.",
+//  *
+//  *  @apiError BadRequest  400 No specific response
+//  * 
+//  *  @apiUse OnNotFoundError
+//  */
+// let getFacebookEvents = function (req, res, next) {
+//     try {
+//         let pageId = req.params.pageId;
+//         var results = {};
+//         fccEvents.init().then(token => {
+//             results.token = token;
+//             return fccEvents.getEventsFromPage(pageId, results.token);
+//         }).then(events => {
+//             console.log(events);
+//             res.status(200).send(events)
+//         }).catch(err => {
+//             console.log(err);
+//             onError(res, err, 500);
+//         });
+//     } catch (err) {
+//         onError(res, err, 500);
+//     }
+// }
 
 /**
  * 
@@ -589,8 +639,7 @@ let onError = function (res, error, statusCode) {
 //setup your routes
 router.get('/members', getMembers);
 router.get('/members/:lName', getMemberByLastName);
-router.post('/members/add', addMember);
-router.put('/members/:id', updateMember);
-router.delete('/members/:id', removeMember);
-router.get('/facebook/events/:pageId', getFacebookEvents);
+router.post('/members', addMember);
+router.put('/members/:id', bearerMiddlewear, updateMember);
+router.delete('/members/:id', bearerMiddlewear, removeMember);
 module.exports = router;

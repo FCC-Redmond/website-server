@@ -1,6 +1,8 @@
 'use strict';
 'use esversion: 6';
 
+require('dotenv').config();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -27,8 +29,10 @@ app.use(cors());
 
 //setup routes
 var api = require('./routes/api.js');
+var auth = require('./routes/basic-auth.js');
 var index = require('./routes/index.js');
 app.use('/api/v0/', api);
+app.use('/api/auth/', auth);
 app.use('/', index);
 
 //Setup static route

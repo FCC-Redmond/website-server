@@ -4,6 +4,8 @@ const express = require('express');
 const router = express.Router();
 const database = require('../lib/member.js');
 const config = require('../config.js');
+
+const bearerMiddlewear = require('../lib/bearer-middleware.js');
 /**
  * @apiDefine OnNotFoundError Resource not found error
  * 
@@ -455,6 +457,9 @@ var addMember = function (req, res, next) {
  */
 var updateMember = async function (req, res, next) {
     try {
+        if (req.body.memberProfile.password) {
+            throw new Error('Cannot change password');
+        }
         if ("memberProfile" in req.body) {
             let memberProfile = req.body.memberProfile;
             console.log('api.js updateMember try if memberProfile', memberProfile);
@@ -470,6 +475,17 @@ var updateMember = async function (req, res, next) {
              * @param {*}      updatedMemberProfile     The updated Member Profile for caller validation
              */
             let cb = function (error, updatedMemberProfile) {
+                console.log('updatedMemberProfile', updatedMemberProfile);
+                let newMemberProfile = {
+                    skills: updatedMemberProfile.skills,
+                    _id: updatedMemberProfile._id,
+                    lastName: updatedMemberProfile.lastName,
+                    firstName: updatedMemberProfile.firstName,
+                    profileUrl: updatedMemberProfile.profileUrl,
+                    linkedInUrl: updatedMemberProfile.linkedInUrl,
+                    gitHubUrl: updatedMemberProfile.gitHubUrl,
+                    email: updatedMemberProfile.email
+                }
                 if (error) {
                     onError(res, error, 500);
                     return;
@@ -479,7 +495,7 @@ var updateMember = async function (req, res, next) {
                     res.status(200).send({
                         "success": true,
                         "message": "Member profile with id: " + memberId + " was updated.",
-                        "data": updatedMemberProfile
+                        "data": newMemberProfile
                     });
                 }
             }
@@ -551,46 +567,46 @@ let removeMember = function (req, res, next) {
     }
 };
 
-/**
- *  @api {GET} /api/v0/facebook/events/:pageId Request events of facebook page
- *  @apiName getFacebookEvents
- *  @apiDescription Get the events from a public Facebook page
- *  @apiGroup Facebook
- *
- *  @apiVersion 0.0.2
- * 
- * 
- *  @apiSuccess (Response body) {Boolean}   success   Boolean success indicator. True or False
- *  @apiSuccess (Response body) {String}    message   Success message with all the provided page events
- * 
- *  @apiSuccessExample Success-Response:
- *  HTTP/1.1 200 OK
- *    {
- *      "success": true,
- *      "message": "Member profile with id: 5a7d0e48e7e0d91ee810ffa4 was removed.",
- *
- *  @apiError BadRequest  400 No specific response
- * 
- *  @apiUse OnNotFoundError
- */
-let getFacebookEvents = function (req, res, next) {
-    try {
-        let pageId = req.params.pageId;
-        var results = {};
-        fccEvents.init().then(token => {
-            results.token = token;
-            return fccEvents.getEventsFromPage(pageId, results.token);
-        }).then(events => {
-            console.log(events);
-            res.status(200).send(events)
-        }).catch(err => {
-            console.log(err);
-            onError(res, err, 500);
-        });
-    } catch (err) {
-        onError(res, err, 500);
-    }
-}
+// /**
+//  *  @api {GET} /api/v0/facebook/events/:pageId Request events of facebook page
+//  *  @apiName getFacebookEvents
+//  *  @apiDescription Get the events from a public Facebook page
+//  *  @apiGroup Facebook
+//  *
+//  *  @apiVersion 0.0.2
+//  * 
+//  * 
+//  *  @apiSuccess (Response body) {Boolean}   success   Boolean success indicator. True or False
+//  *  @apiSuccess (Response body) {String}    message   Success message with all the provided page events
+//  * 
+//  *  @apiSuccessExample Success-Response:
+//  *  HTTP/1.1 200 OK
+//  *    {
+//  *      "success": true,
+//  *      "message": "Member profile with id: 5a7d0e48e7e0d91ee810ffa4 was removed.",
+//  *
+//  *  @apiError BadRequest  400 No specific response
+//  * 
+//  *  @apiUse OnNotFoundError
+//  */
+// let getFacebookEvents = function (req, res, next) {
+//     try {
+//         let pageId = req.params.pageId;
+//         var results = {};
+//         fccEvents.init().then(token => {
+//             results.token = token;
+//             return fccEvents.getEventsFromPage(pageId, results.token);
+//         }).then(events => {
+//             console.log(events);
+//             res.status(200).send(events)
+//         }).catch(err => {
+//             console.log(err);
+//             onError(res, err, 500);
+//         });
+//     } catch (err) {
+//         onError(res, err, 500);
+//     }
+// }
 
 /**
  * 
@@ -624,7 +640,6 @@ let onError = function (res, error, statusCode) {
 router.get('/members', getMembers);
 router.get('/members/:lName', getMemberByLastName);
 router.post('/members', addMember);
-router.put('/members/:id', updateMember);
+router.put('/members/:id', bearerMiddlewear, updateMember);
 router.delete('/members/:id', removeMember);
-router.get('/facebook/events/:pageId', getFacebookEvents);
 module.exports = router;

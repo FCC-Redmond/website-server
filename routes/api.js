@@ -641,5 +641,5 @@ router.get('/members', getMembers);
 router.get('/members/:lName', getMemberByLastName);
 router.post('/members', addMember);
 router.put('/members/:id', bearerMiddlewear, updateMember);
-router.delete('/members/:id', removeMember);
+router.delete('/members/:id', bearerMiddlewear, removeMember);
 module.exports = router;

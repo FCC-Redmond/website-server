@@ -1,8 +1,11 @@
 {
   "name": "website-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "description": "A. You must be a valid member of the Free Code Camp Redmond, WA Community.",
+  "main": "config.js",
+  "directories": {
+    "lib": "lib"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -11,19 +14,17 @@
     "type": "git",
     "url": "git+https://github.com/FCC-Redmond/website-server.git"
   },
-  "author": "Amber Kim, Apoorva Teja",
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/FCC-Redmond/website-server/issues"
   },
   "homepage": "https://github.com/FCC-Redmond/website-server#readme",
-  "devDependencies": {},
   "dependencies": {
+    "bcrypt": "^2.0.1",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
-    "express": "^4.16.2",
-    "fb": "^2.0.0",
-    "mongodb": "^3.0.2",
-    "mongoose": "^5.0.3"
+    "jsonwebtoken": "^8.2.1",
+    "mongoose": "^5.0.17"
   }
 }

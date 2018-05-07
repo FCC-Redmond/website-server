@@ -27,8 +27,10 @@ app.use(cors());
 
 //setup routes
 var api = require('./routes/api.js');
+var auth = require('./routes/basic-auth.js');
 var index = require('./routes/index.js');
 app.use('/api/v0/', api);
+app.use('/api/auth/', auth);
 app.use('/', index);
 
 //Setup static route

@@ -1,5 +1,6 @@
 'use strict';
 
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 
 //define a schema
@@ -11,7 +12,15 @@ const memberSchema = new Schema({
     profileUrl: String,
     linkedInUrl: String,
     gitHubUrl: String,
-    email: String,
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
     addTS: {
         type: Date,
         required: true
@@ -23,23 +32,18 @@ const memberSchema = new Schema({
 
 //validation before save
 memberSchema.pre('save', function (next) {
-    var self = this;
-    members.find({
-        "email": this.email
-    }, function (err, members) {
-        if (err) {
-            next(err);
-        }
-        if (members.length == 0) {
-            next();
-        } else {
-            console.log('User exists: ' + self.firstName + " " + self.lastName);
-            next(new Error(JSON.stringify({
-                "success": false,
-                "message": "User Exists!"
-            })));
-        }
-    }).exec();
+    console.log('this', this);
+    console.log('in pre save');
+    if (this.isNew) {
+        console.log('this is new');
+        bcrypt.hash(this.password, 10).then(hash => {
+          this.password = hash;
+          console.log('new hash', hash);
+          next();
+        }).catch(err => console.error(err));
+    } else {
+        next();
+    };
 });
 
 module.exports = mongoose.model('members', memberSchema);

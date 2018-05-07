@@ -101,4 +101,4 @@ LICENSE
 apidoc.json
 secrets
 
-.vscode
+.vscode/launch.json

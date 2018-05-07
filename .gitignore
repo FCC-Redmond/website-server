@@ -100,3 +100,5 @@ Procfile
 LICENSE
 apidoc.json
 secrets
+
+.vscode

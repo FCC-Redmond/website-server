@@ -30,6 +30,11 @@ const memberSchema = new Schema({
     }
 });
 
+memberSchema.methods.checkPassword = function (attempt) {
+    console.log('schema method attempt', attempt);
+    return bcrypt.compare(attempt, this.password);
+  };
+
 //validation before save
 memberSchema.pre('save', function (next) {
     console.log('this', this);

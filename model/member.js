@@ -9,7 +9,9 @@ const memberSchema = new Schema({
     lastName: String,
     firstName: String,
     skills: Array,
+    imageUrl: String,
     profileUrl: String,
+    portfolioUrl: String,
     linkedInUrl: String,
     gitHubUrl: String,
     email: {

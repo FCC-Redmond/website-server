@@ -105,6 +105,8 @@ var getMembers = async function (req, res, next) {
                     skills: member.skills,
                     lastName: member.lastName,
                     firstName: member.firstName,
+                    imageUrl: member.imageUrl,
+                    portfolioUrl: member.portfolioUrl,
                     linkedInUrl: member.linkedInUrl,
                     gitHubUrl: member.gitHubUrl,
                     profileUrl: member.profileUrl

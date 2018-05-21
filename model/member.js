@@ -33,19 +33,14 @@ const memberSchema = new Schema({
 });
 
 memberSchema.methods.checkPassword = function (attempt) {
-    console.log('schema method attempt', attempt);
     return bcrypt.compare(attempt, this.password);
   };
 
 //validation before save
 memberSchema.pre('save', function (next) {
-    console.log('this', this);
-    console.log('in pre save');
     if (this.isNew) {
-        console.log('this is new');
         bcrypt.hash(this.password, 10).then(hash => {
           this.password = hash;
-          console.log('new hash', hash);
           next();
         }).catch(err => console.error(err));
     } else {

@@ -298,8 +298,10 @@ var getMembersBySkills = async function (req, res, next) {
             return {
                 _id: member._id,
                 skills: member.skills,
-                lastName: member.LastName,
+                lastName: member.lastName,
                 firstName: member.firstName,
+                imageUrl: member.imageUrl,
+                portfolioUrl: member.portfolioUrl,
                 linkedInUrl: member.linkedInUrl,
                 gitHubUrl: member.gitHubUrl,
                 profileUrl: member.profileUrl

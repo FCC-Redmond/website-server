@@ -368,7 +368,6 @@ var addMember = function (req, res, next) {
     try {
         if ("memberProfile" in req.body) {
             let newMember = req.body.memberProfile;
-            console.log('add member newMember', newMember);
             if (!newMember.hasOwnProperty("email")) {
                 res.status(422).send({
                     "success": false,
@@ -397,7 +396,6 @@ var addMember = function (req, res, next) {
                 //setup the addTS and modifiedTS
                 newMember.addTS = Date.now();
                 newMember.modifiedTS = "";
-                console.log('before database Add Member', newMember);
                 database.addMember(newMember, cb);
             }
         } else {
@@ -468,7 +466,6 @@ var updateMember = async function (req, res, next) {
         }
         if ("memberProfile" in req.body) {
             let memberProfile = req.body.memberProfile;
-            console.log('api.js updateMember try if memberProfile', memberProfile);
             let memberId = req.params.id;
             if (!checkMongoDbId(memberId)) {
                 onError(res, new Error("The provided ID is not a valid mongoDb ID"), 500);
@@ -481,7 +478,6 @@ var updateMember = async function (req, res, next) {
              * @param {*}      updatedMemberProfile     The updated Member Profile for caller validation
              */
             let cb = function (error, updatedMemberProfile) {
-                console.log('updatedMemberProfile', updatedMemberProfile);
                 let newMemberProfile = {
                     skills: updatedMemberProfile.skills,
                     _id: updatedMemberProfile._id,
